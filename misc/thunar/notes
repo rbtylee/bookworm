@@ -1,0 +1,4 @@
+SFTP on Thunar
+
+gvfs-backends gvfs gvfs-thunar
+
