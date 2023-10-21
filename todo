@@ -1,7 +1,15 @@
-Packaging
+Packaging for standard ISO 686
 
-cheat
+terminology desktop
+EFL?
 MOTD
 ephoto
 look at bodhi-plymouth theme stuff
-thunar-bl
+apt sources list    does not appear to be in any package
+grub				does not appear to be in any package
+lightdm config
+
+Packaging misc stuff in repos
+
+cheat
+
