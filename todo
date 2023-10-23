@@ -1,13 +1,17 @@
 Packaging for standard ISO 686
 
-terminology desktop
-EFL?
+bodhi patched arandr ?
+py-efl
 MOTD
-ephoto
 look at bodhi-plymouth theme stuff
 apt sources list    does not appear to be in any package
 grub				does not appear to be in any package
 lightdm config
+
+Packaging all apps on appcenter
+
+all modules
+
 
 Packaging misc stuff in repos
 
