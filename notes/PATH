@@ -1,0 +1,4 @@
+look at /etc/profile and /etc/environment in Jammy and bookworm
+
+on this bookworm install we have by default:
+  /usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games
