@@ -1,0 +1,12 @@
+For security reasons, LightDM does not remember the username by default. 
+
+To make it remember your username by making a simple change in its’ configuration file.
+
+File /etc/lightdm/lightdm.conf has to have 
+
+[SeatDefaults]
+greeter-hide-users = false
+
+However I moved this to the bodhi config to aviod modifying Debian packages:
+
+Add to to file: /etc/lightdm/lightdm.conf.d/70-linuxbodhi.conf
