@@ -2,12 +2,12 @@ Packaging for standard ISO 686
 
 checkand set PATH
 bodhi patched arandr ?
-py-efl
+
 MOTD
 look at bodhi-plymouth theme stuff
 apt sources list    does not appear to be in any package
 grub				does not appear to be in any package
-lightdm config
+
 
 Packaging all apps on appcenter
 
