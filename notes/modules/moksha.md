@@ -1,14 +1,15 @@
 
 repos: https://github.com/JeffHoogland/moksha-modules-extra
-
+       
+       https://github.com/thewaiter/comptonmod
+       https://github.com/BodhiDev//Desktitle2.0
        https://github.com/BodhiDev/Forecast2.0
        https://github.com/thewaiter/launcher-dictionary
        https://github.com/rbtylee/launcher-spellchecker
        https://github.com/rbtylee/emodule-productivity
        https://github.com/thewaiter/StickyNotes
-       
-FIXME
- error: auncher-spellchecker: Unmet build dependencies: libedbus-dev
+       https://github.com/thewaiter/wincontrol
+
 
 moksha-modules-extra
 Modules packaged
