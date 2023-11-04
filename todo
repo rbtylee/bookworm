@@ -6,8 +6,8 @@ bodhi patched arandr ?
 MOTD
 look at bodhi-plymouth theme stuff
 apt sources list    does not appear to be in any package
-grub				does not appear to be in any package
-
+grub		    does not appear to be in any package
+efl-version code is missing not on git hub as it should be
 
 Packaging all apps on appcenter
 
