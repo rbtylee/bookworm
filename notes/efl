@@ -1,0 +1,15 @@
+Build bookworm 64
+
+cd obj-x86_64-linux-gnu && LC_ALL=C.UTF-8 ninja -j3 -v doc
+ninja: error: unknown target 'doc', did you mean 'all'?
+
+Had to enable building docs in rules file to fix
+
+dpkg-genbuildinfo: warning:     debian/changelog(l1): bad key-value after ';': '; urgency=low'
+LINE: efl (1.26.99-3) unstable;; urgency=low
+dpkg-genbuildinfo: warning: unknown information field '' in input data in parsed version of changelog
+dpkg-genbuildinfo: warning:     debian/changelog(l1): bad key-value after ';': '; urgency=low'
+
+
+Multiple lintian errors i have to address edited control and changelog so far
+ new symbols in libefl.symbols file
