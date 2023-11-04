@@ -1,0 +1,6 @@
+Leafpad needs much work
+
+Many warning: ‘GTimeVal’ is deprecated: Use 'GDateTime' instead [-Wdeprecated-declarations] warnings
+warning: ‘GTypeDebugFlags’ is deprecated [-Wdeprecated-declarations]
+warning: ‘g_unicode_canonical_decomposition’ is deprecated [-Wdeprecated-declarations]
+warning: ‘g_strcasecmp’ is deprecated [-Wdeprecated-declarations]
