@@ -2,14 +2,14 @@ Packaging for standard ISO 686
 
 checkand set PATH
 bodhi patched arandr ?
-
+Add Policy kit file to leafpad
 Thunar help page is not patched :(
 look at bodhi-plymouth theme stuff
 apt sources list    does not appear to be in any package
 grub		    does not appear to be in any package
 efl-version code is missing not on git hub as it should be
 change repo bash aliases to functions to check PWD and verify if sure if not correct folder
-
+picom and so on
 
 Packaging all apps on appcenter
 
