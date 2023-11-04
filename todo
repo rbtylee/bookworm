@@ -3,7 +3,7 @@ Packaging for standard ISO 686
 checkand set PATH
 bodhi patched arandr ?
 
-
+Thunar help page is not patched :(
 look at bodhi-plymouth theme stuff
 apt sources list    does not appear to be in any package
 grub		    does not appear to be in any package
