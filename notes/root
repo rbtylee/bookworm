@@ -1,0 +1,23 @@
+Can you install debian without a root password
+
+Remove the root password:
+
+sudo passwd -d root
+
+Lock the account:
+
+sudo passwd -l root
+
+SULOGIN(8)  
+sulogin is invoked by init when the system goes into single-user
+       mode.
+
+       The user is prompted:
+
+       Give root password for system maintenance (or type Control-D for
+       normal startup):
+
+       If the root account is locked and --force is specified, no
+       password is required.
+       
+https://unix.stackexchange.com/questions/50501/how-to-remove-root-password-on-debian
