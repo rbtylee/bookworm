@@ -1,0 +1,5 @@
+Moksha MOdules and maybe more on debian bookworm (Ubuntu?)
+
+```libtoolize: Consider adding 'AC_CONFIG_MACRO_DIRS([m4])' to configure.ac,
+libtoolize: and rerunning libtoolize and aclocal.
+```
