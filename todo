@@ -5,6 +5,9 @@ Packaging for standard ISO 686
    arandr
    thunar
 
+32 bit
+   update chromium 32 bit
+
 Ensure chromium suggested pkgs install  
 check and set PATH
 picom and so on
