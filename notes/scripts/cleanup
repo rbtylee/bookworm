@@ -1,0 +1,9 @@
+remove_db() {
+  # Remove files with 'dbgsym' in the name
+  for file in *; do
+    if [[ "$file" == *dbgsym* ]]; then
+      echo "Removing $file"
+      rm "$file"
+    fi
+  done
+}
