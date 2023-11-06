@@ -1,0 +1,167 @@
+warning: C header and source files are ignored when -C or --ccode is set
+settings.vala:67.25-67.43: warning: `GLib.Settings.list_keys' has been deprecated since 2.46
+   67 |         string[] keys = gsettings.list_keys ();
+      |                         ^~~~~~~~~~~~~~~~~~~    
+menubar.vala:667.42-667.82: warning: Access to possible `null'. Perform a check or use an unsafe cast.
+  667 |                     Signal.emit_by_name ((get_toplevel () as Gtk.Window).get_focus ().get_accessible (), "focus-event", true);
+      |                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                                            
+shutdown-dialog.vala:561.13-561.27: warning: `Gtk.Widget.override_font' has been deprecated since 3.16
+  561 |             l.override_font (Pango.FontDescription.from_string ("Ubuntu Light 12"));
+      |             ^~~~~~~~~~~~~~~                                                         
+shutdown-dialog.vala:562.13-562.28: warning: `Gtk.Widget.override_color' has been deprecated since 3.16
+  562 |             l.override_color (Gtk.StateFlags.NORMAL, { 1.0f, 1.0f, 1.0f, 0.0f });
+      |             ^~~~~~~~~~~~~~~~                                                     
+shutdown-dialog.vala:563.13-563.28: warning: `Gtk.Widget.override_color' has been deprecated since 3.16
+  563 |             l.override_color (Gtk.StateFlags.FOCUSED, { 1.0f, 1.0f, 1.0f, 1.0f });
+      |             ^~~~~~~~~~~~~~~~                                                      
+shutdown-dialog.vala:564.13-564.28: warning: `Gtk.Widget.override_color' has been deprecated since 3.16
+  564 |             l.override_color (Gtk.StateFlags.ACTIVE, { 1.0f, 1.0f, 1.0f, 1.0f });
+      |             ^~~~~~~~~~~~~~~~                                                     
+shutdown-dialog.vala:590.9-590.49: warning: Access to possible `null'. Perform a check or use an unsafe cast.
+  590 |         (get_toplevel () as Gtk.Window).set_focus (null);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~        
+shutdown-dialog.vala:107.13-107.37: warning: `Gtk.Widget.override_font' has been deprecated since 3.16
+  107 |             title_label.override_font (Pango.FontDescription.from_string ("Ubuntu Light 15"));
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~                                                         
+shutdown-dialog.vala:108.13-108.38: warning: `Gtk.Widget.override_color' has been deprecated since 3.16
+  108 |             title_label.override_color (Gtk.StateFlags.NORMAL, { 1.0f, 1.0f, 1.0f, 1.0f });
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~                                                     
+shutdown-dialog.vala:141.9-141.27: warning: `Gtk.Widget.override_font' has been deprecated since 3.16
+  141 |         label.override_font (Pango.FontDescription.from_string ("Ubuntu Light 12"));
+      |         ^~~~~~~~~~~~~~~~~~~                                                         
+shutdown-dialog.vala:142.9-142.28: warning: `Gtk.Widget.override_color' has been deprecated since 3.16
+  142 |         label.override_color (Gtk.StateFlags.NORMAL, { 1.0f, 1.0f, 1.0f, 1.0f });
+      |         ^~~~~~~~~~~~~~~~~~~~                                                     
+shutdown-dialog.vala:339.9-339.50: warning: Access to possible `null'. Perform a check or use an unsafe cast.
+  339 |         (get_toplevel () as Gtk.Window).move_focus (Gtk.DirectionType.TAB_FORWARD);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                                 
+shutdown-dialog.vala:344.9-344.50: warning: Access to possible `null'. Perform a check or use an unsafe cast.
+  344 |         (get_toplevel () as Gtk.Window).move_focus (Gtk.DirectionType.TAB_BACKWARD);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                                  
+shutdown-dialog.vala:349.22-349.62: warning: Access to possible `null'. Perform a check or use an unsafe cast.
+  349 |         var widget = (get_toplevel () as Gtk.Window).get_focus ();
+      |                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~    
+shutdown-dialog.vala:351.13-351.53: warning: Access to possible `null'. Perform a check or use an unsafe cast.
+  351 |             (get_toplevel () as Gtk.Window).set_focus (null);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~        
+menubar.vala:479.9-479.28: warning: `Gtk.Widget.override_color' has been deprecated since 3.16
+  479 |         label.override_color (Gtk.StateFlags.INSENSITIVE, keyboard_fg);
+      |         ^~~~~~~~~~~~~~~~~~~~                                           
+menubar.vala:154.13-154.38: warning: `Gtk.Widget.override_color' has been deprecated since 3.16
+  154 |             clock_label.override_color (Gtk.StateFlags.INSENSITIVE, clock_fg);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~                                        
+menubar.vala:178.13-178.38: warning: `Gtk.Widget.override_color' has been deprecated since 3.16
+  178 |             power_label.override_color (Gtk.StateFlags.INSENSITIVE, power_fg);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~                                        
+menubar.vala:218.13-218.32: warning: `Gtk.Widget.override_color' has been deprecated since 3.16
+  218 |             label.override_color (Gtk.StateFlags.INSENSITIVE, hostname_fg);
+      |             ^~~~~~~~~~~~~~~~~~~~                                           
+prompt-box.vala:178.9-178.32: warning: `Gtk.Widget.override_font' has been deprecated since 3.16
+  178 |         name_label.override_font (Pango.FontDescription.from_string ("Ubuntu 13"));
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~                                                   
+prompt-box.vala:179.9-179.33: warning: `Gtk.Widget.override_color' has been deprecated since 3.16
+  179 |         name_label.override_color (Gtk.StateFlags.NORMAL, { 1.0f, 1.0f, 1.0f, 1.0f });
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~                                                     
+prompt-box.vala:184.9-184.30: warning: `Gtk.Widget.margin_left' has been deprecated since 3.12
+  184 |         name_label.margin_left = 2;
+      |         ^~~~~~~~~~~~~~~~~~~~~~     
+prompt-box.vala:199.25-199.37: warning: `Gtk.Alignment' has been deprecated since 3.14
+  199 |         var align = new Gtk.Alignment (0.5f, 0.5f, 0.0f, 0.0f);
+      |                         ^~~~~~~~~~~~~                          
+prompt-box.vala:199.13-199.17: warning: `Gtk.Alignment' has been deprecated since 3.14
+  199 |         var align = new Gtk.Alignment (0.5f, 0.5f, 0.0f, 0.0f);
+      |             ^~~~~                                              
+prompt-box.vala:234.9-234.38: warning: `Gtk.Widget.override_font' has been deprecated since 3.16
+  234 |         small_name_label.override_font (Pango.FontDescription.from_string ("Ubuntu 13"));
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                                                   
+prompt-box.vala:235.9-235.39: warning: `Gtk.Widget.override_color' has been deprecated since 3.16
+  235 |         small_name_label.override_color (Gtk.StateFlags.NORMAL, { 1.0f, 1.0f, 1.0f, 1.0f });
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                                                     
+prompt-box.vala:238.9-238.36: warning: `Gtk.Widget.margin_left' has been deprecated since 3.12
+  238 |         small_name_label.margin_left = 2;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~     
+prompt-box.vala:246.25-246.37: warning: `Gtk.Alignment' has been deprecated since 3.14
+  246 |         var align = new Gtk.Alignment (0.5f, 0.5f, 0.0f, 0.0f);
+      |                         ^~~~~~~~~~~~~                          
+prompt-box.vala:246.13-246.17: warning: `Gtk.Alignment' has been deprecated since 3.14
+  246 |         var align = new Gtk.Alignment (0.5f, 0.5f, 0.0f, 0.0f);
+      |             ^~~~~                                              
+dash-entry.vala:74.9-74.21: warning: `Gtk.Widget.override_font' has been deprecated since 3.16
+   74 |         override_font (Pango.FontDescription.from_string (font));
+      |         ^~~~~~~~~~~~~                                            
+prompt-box.vala:460.9-460.27: warning: `Gtk.Widget.override_font' has been deprecated since 3.16
+  460 |         label.override_font (Pango.FontDescription.from_string ("Ubuntu Bold 10"));
+      |         ^~~~~~~~~~~~~~~~~~~                                                        
+prompt-box.vala:465.9-465.28: warning: `Gtk.Widget.override_color' has been deprecated since 3.16
+  465 |         label.override_color (Gtk.StateFlags.NORMAL, color);
+      |         ^~~~~~~~~~~~~~~~~~~~                                
+prompt-box.vala:578.9-578.40: warning: `Gtk.Widget.override_font' has been deprecated since 3.16
+  578 |         combo.get_child ().override_font (Pango.FontDescription.from_string (DashEntry.font));
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                                                      
+list-stack.vala:77.13-77.50: warning: Access to possible `null'. Perform a check or use an unsafe cast.
+   77 |             (prev.data as GreeterList).greeter_box.pop ();
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~        
+main-window.vala:189.13-189.28: warning: `Gtk.Widget.margin_left' has been deprecated since 3.12
+  189 |             hbox.margin_left = get_grid_offset (get_allocated_width ()) + grid_size;
+      |             ^~~~~~~~~~~~~~~~                                                        
+main-window.vala:190.13-190.29: warning: `Gtk.Widget.margin_right' has been deprecated since 3.12
+  190 |             hbox.margin_right = get_grid_offset (get_allocated_width ());
+      |             ^~~~~~~~~~~~~~~~~                                            
+main-window.vala:199.33-199.48: warning: `Gdk.cairo_create' has been deprecated since 3.22
+  199 |         background.set_surface (Gdk.cairo_create (get_window ()).get_target ());
+      |                                 ^~~~~~~~~~~~~~~~                                
+mv -f logo_generator_vala.stamp-t logo_generator_vala.stamp
+gcc -DHAVE_CONFIG_H -I. -I..   -Wdate-time -D_FORTIFY_SOURCE=2 -I/usr/include/gtk-3.0 -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/harfbuzz -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/fribidi -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/x86_64-linux-gnu -I/usr/include/gio-unix-2.0 -I/usr/include/atk-1.0 -I/usr/include/at-spi2-atk/2.0 -I/usr/include/at-spi-2.0 -I/usr/include/dbus-1.0 -I/usr/lib/x86_64-linux-gnu/dbus-1.0/include -I/usr/include/lightdm-gobject-1 -I/usr/include/libxml2 -D_REENTRANT -I/usr/include/xapp -pthread  -include gtk/gtkx.h -w -DGETTEXT_PACKAGE=\"slick-greeter\" -DLOCALEDIR=\""/usr/share/locale"\" -DVERSION=\"1.8.2\" -DPKGDATADIR=\""/usr/share/slick-greeter"\" -g -O2 -ffile-prefix-map=/home/ylee/code/slick-greeter=. -fstack-protector-strong -Wformat -Werror=format-security -c -o logo_generator-logo-generator.o `test -f 'logo-generator.c' || echo './'`logo-generator.c
+user-list.vala:605.35-605.78: warning: Access to possible `null'. Perform a check or use an unsafe cast.
+  605 |             new_background_file = (selected_entry as UserPromptBox).background;
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+user-list.vala:654.23-654.63: warning: Access to possible `null'. Perform a check or use an unsafe cast.
+  654 |             session = (selected_entry as UserPromptBox).session;
+      |                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+main-window.vala:51.9-51.33: warning: `Gtk.Widget.override_background_color' has been deprecated since 3.16
+   51 |         override_background_color (Gtk.StateFlags.NORMAL, bg_color);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~                                   
+main-window.vala:53.9-53.23: warning: `Gtk.Window.has_resize_grip' has been deprecated since 3.14
+   53 |         has_resize_grip = false;
+      |         ^~~~~~~~~~~~~~~         
+main-window.vala:66.29-66.41: warning: `Gtk.Alignment' has been deprecated since 3.14
+   66 |         var menualign = new Gtk.Alignment (0.0f, 0.0f, 1.0f, 0.0f);
+      |                             ^~~~~~~~~~~~~                          
+main-window.vala:66.13-66.21: warning: `Gtk.Alignment' has been deprecated since 3.14
+   66 |         var menualign = new Gtk.Alignment (0.0f, 0.0f, 1.0f, 0.0f);
+      |             ^~~~~~~~~                                              
+main-window.vala:104.25-104.37: warning: `Gtk.Alignment' has been deprecated since 3.14
+  104 |         var align = new Gtk.Alignment (0.5f, 0.5f, 0.0f, 0.0f);
+      |                         ^~~~~~~~~~~~~                          
+main-window.vala:104.13-104.17: warning: `Gtk.Alignment' has been deprecated since 3.14
+  104 |         var align = new Gtk.Alignment (0.5f, 0.5f, 0.0f, 0.0f);
+      |             ^~~~~                                              
+main-window.vala:122.21-122.33: warning: `Gtk.Alignment' has been deprecated since 3.14
+  122 |         align = new Gtk.Alignment (0.0f, 0.5f, 0.0f, 1.0f);
+      |                     ^~~~~~~~~~~~~                          
+slick-greeter.vala:549.37-549.91: warning: Access to possible `null'. Perform a check or use an unsafe cast.
+  549 |         unowned X.Display display = (screen.get_display () as Gdk.X11.Display).get_xdisplay ();
+      |                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~    
+slick-greeter.vala:550.36-550.73: warning: Access to possible `null'. Perform a check or use an unsafe cast.
+  550 |         unowned X.Screen xscreen = (screen as Gdk.X11.Screen).get_xscreen ();
+      |                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~    
+slick-greeter.vala:553.38-553.90: warning: Access to possible `null'. Perform a check or use an unsafe cast.
+  553 |                                      (screen.get_root_window () as Gdk.X11.Window).get_xid (),
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~    
+slick-greeter.vala:561.46-561.83: warning: Access to possible `null'. Perform a check or use an unsafe cast.
+  561 |                                              (visual as Gdk.X11.Visual).get_xvisual (),
+      |                                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~    
+slick-greeter.vala:490.36-490.112: warning: Access to possible `null'. Perform a check or use an unsafe cast.
+  490 |                     keyboard_xid = (main_window.menubar.keyboard_window.get_window () as Gdk.X11.Window).get_xid ();
+      |                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~    
+slick-greeter.vala:840.38-840.92: warning: Access to possible `null'. Perform a check or use an unsafe cast.
+  840 |         unowned X.Display xdisplay = (screen.get_display () as Gdk.X11.Display).get_xdisplay ();
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~    
+idle-monitor.vala:62.19-62.53: warning: Access to possible `null'. Perform a check or use an unsafe cast.
+   62 |         display = (d as Gdk.X11.Display).get_xdisplay ();
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~    
+dash-box.vala:115.9-115.21: warning: Switch does not handle `NORMAL' of enum `DashBox.Mode'
+  115 |         switch (mode)
+      |         ^~~~~~~~~~~~~
+animate-timer.vala:33.5-33.41: warning: Type `AnimateTimer.EasingFunc' can not be used for a GLib.Object property
+   33 |     public unowned EasingFunc easing_func { get; private set; }
