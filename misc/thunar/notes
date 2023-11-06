@@ -2,3 +2,11 @@ SFTP on Thunar
 
 gvfs-backends gvfs gvfs-thunar
 
+FIXME add Bodhi customized About info to patches:
+    thunar/thunar-window.c 4676:   _("Thunar is a fast and easy to use file manager\n"
+AND work on string translations
+
+Look at ```dpkg: libthunarx-3-0:amd64: dependency problems, but removing anyway as you requ
+ested:
+ xfdesktop4 depends on libthunarx-3-0 (>= 4.17.10~).
+```
