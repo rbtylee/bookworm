@@ -26,7 +26,10 @@ change repo bash aliases to functions to check PWD and verify if sure if not cor
 Packaging all apps on appcenter
 
 all modules
-
+W: moksha-module-spellchecker: initial-upload-closes-no-bugs [usr/share/doc/moksha-module-spellchecker/changelog.Debian.gz:1]
+W: emprint: mismatched-override binary-without-manpage usr/bin/emprint [usr/share/lintian/overrides/emprint:1]
+W: emprint: no-manual-page [usr/bin/emprint]
+N: 0 hints overridden; 1 unused override
 
 Packaging misc stuff in repos
 
