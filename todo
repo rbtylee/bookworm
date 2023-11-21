@@ -1,17 +1,17 @@
 Packaging for standard ISO 686
 
 64 bit 
-
+   chromium use same desktop as Ubuntu
    arandr
-   picom
    picom conf
 
 32 bit
+	chromium use same desktop as Ubuntu
    
 
 Ensure chromium suggested pkgs install  
 check and set PATH
-picom and so on
+picom conf
 bodhi patched arandr ?
 
 check Policy kit leafpad and thunar 
