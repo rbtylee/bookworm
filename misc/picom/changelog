@@ -1,0 +1,30 @@
+picom (10.2-1) bookworm; urgency=medium
+
+  * Bookworm release
+
+ -- Robert Wiley <ylee@bodhilinux.com>  Tue, 21 Nov 2023 06:24:49 -0500
+
+picom (9.1-2) jammy; urgency=medium
+
+  * Block install of compton-conf
+
+ -- Robert Wiley <ylee@bodhilinux.com>  Fri, 23 Jun 2023 05:03:44 -0400
+
+picom (9.1-1) jammy; urgency=medium
+
+  * BL7 Release
+
+ -- Robert Wiley <ylee@bodhilinux.com>  Tue, 06 Sep 2022 05:58:13 -0400
+
+picom (8.2-2) focal; urgency=medium
+
+  * Add icon to desktop file
+
+ -- Robert Wiley <ylee@bodhilinux.com>  Fri, 19 Mar 2021 07:50:59 -0400
+
+
+picom (8.2-1) focal; urgency=medium
+
+  * Initial Release
+
+ -- Robert Wiley <ylee@bodhilinux.com>  Tue, 01 Dec 2020 11:47:38 -0500
