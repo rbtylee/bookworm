@@ -1,0 +1,5 @@
+look over grub shit on linuxc mint and copy. change back to default debian grub and move fucking pict to right spot:
+
+  GRUB_BACKGROUND="/etc/grub.d/backgrounds/grub.png" DOES NOT BELONG IN /etc/default
+
+rebuild debian system-adjustments
