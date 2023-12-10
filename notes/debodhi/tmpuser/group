@@ -1,0 +1,10 @@
+ cat tmp | while read LINE ;do
+        echo ${LINE} | xargs -i sed -e 's/,{}$//g' group > group.new1
+        echo ${LINE} | xargs -i sed -e 's/,{},/,/g' group.new1 > group.new2
+        echo ${LINE} | xargs -i sed -e 's/:{}$/:/g' group.new2 > group.new3
+        echo ${LINE} | xargs -i sed -e 's/:{},/:/g' group.new3 > group0
+      done
+      
+while IFS= read -r LINE ; do
+    sed -e 's/,{}$//g' -e 's/,{},/,/g' -e 's/:{}$/:/' -e 's/:{},/:/' <<< "$LINE" > group0
+done < tmp

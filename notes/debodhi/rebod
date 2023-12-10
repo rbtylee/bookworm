@@ -1,0 +1,872 @@
+#!/bin/bash
+
+# rebod script to make an installable livecd/dvd from a Debian installed 
+# and customized system
+# before use see # FIXME: User name hardcoded
+
+# check if script is running with root privileges
+. /etc/rebod/rebod.version
+
+testroot="`whoami`"
+
+if [ "$testroot" != "root" ]; then
+	 echo "Use rebod $REBODVERSION as follows:"
+     echo " "
+     echo "   sudo rebod backup|clean|dist [cdfs|iso] [filename.iso]"
+     echo " "
+     echo " "
+     echo "Examples:"
+     echo " "
+     echo "   sudo rebod backup (to make a livecd/dvd backup of your system)"
+     echo " "
+     echo "   sudo rebod backup custom.iso"
+     echo "   (to make a livecd/dvd backup and call the iso custom.iso)" 
+     echo " "
+     echo "   sudo rebod dist (to make a distributable livecd/dvd of your system)"
+     echo " "
+     echo "   sudo rebod dist cdfs"
+     echo "   (to make a distributable livecd/dvd filesystem only)"
+     echo " "
+     echo "   sudo rebod dist iso custom.iso"
+     echo "   (to make a distributable iso named custom.iso but only"
+     echo "     if the cdfs is already present)"
+     echo " "
+     echo "   cdfs and iso options should only be used if you wish to modify something on the"
+     echo "   cd before the iso is created.  An example of this would be to modify the isolinux"
+     echo "   portion of the livecd/dvd"
+     echo " "
+     echo "   sudo rebod clean  (to clean up temporary files of rebod)"
+     echo " "
+
+     exit 1
+fi
+
+#added log_msg to reduce size. code provided by Ivailo (a.k.a. SmiL3y) 
+log_msg() {
+    echo "$1"
+    echo "$1" >>$WORKDIR/rebod.log
+}
+# load the rebod.conf file 
+
+. /etc/rebod.conf
+
+# if the rebod.conf file is incorrect or missing, make sure to set defaults
+
+if [ "$LIVEUSER" = "" ]; then
+#Somebody must have removed the username from the configuration file
+#echo 
+#this is a custom live user
+LIVEUSER="custom"
+fi
+
+#make sure live user is all lowercase
+LIVEUSER="`echo $LIVEUSER | awk '{print tolower ($0)}'`"
+
+SHOWICON="`echo $SHOWICON | awk '{print tolower ($0)}'`"
+
+if [ "$SHOWICON" = "1" ]; then
+SHOWICON="1"
+elif [ "$SHOWICON" = "yes" ]; then
+SHOWICON="1"
+elif [ "$SHOWICON" = "true" ]; then
+SHOWICON="1"
+else
+SHOWICON="0"
+fi
+
+
+if [ "$WORKDIR" = "" ]; then
+WORKDIR="/home/rebod/rebod"
+BASEWORKDIR="/home/rebod"
+else
+BASEWORKDIR="$WORKDIR"
+WORKDIR="$WORKDIR/rebod"
+fi
+
+if [ "$LIVECDLABEL" = "" ]; then
+LIVECDLABEL="Custom Live CD"
+fi
+
+if [ "$ISOBOOT" != "GRUB" ]; then
+ISOBOOT="ISOLINUX"
+fi
+
+if [ "$2" = "cdfs" ]; then
+echo "Creating the cd filesystem only"
+elif [ "$2" = "iso" ]; then
+echo "Creating the iso file only"
+elif [ "$2" = "" ]; then
+echo " "
+else
+CUSTOMISO="$2"
+fi
+
+if [ "$3" != "" ]; then
+CUSTOMISO="$3"
+fi
+
+if [ "$CUSTOMISO" = "" ]; then
+CUSTOMISO="custom$1.iso"
+fi
+
+case $1  in
+
+  backup)
+     echo "System Backup Mode Selected"
+     ;;
+
+  clean)
+     echo "Removing the build directory now..."
+     rm -rf $WORKDIR
+     echo "Done...Exiting"
+     exit 0
+     ;;
+
+  dist)
+     echo "Distribution Mode Selected"
+     ;;
+
+
+  *)
+     echo "Usage of rebod $rebodVERSION is as follows:"
+     echo " "
+     echo "   sudo rebod backup|clean|dist [cdfs|iso] [filename.iso]"
+     echo " "
+     echo " "
+     echo "Examples:"
+     echo " "
+     echo "   sudo rebod backup (to make a livecd/dvd backup of your system)"
+     echo " "
+     echo "   sudo rebod backup custom.iso"
+     echo "   (to make a livecd/dvd backup and call the iso custom.iso)" 
+     echo " "
+     echo "   sudo rebod dist (to make a distributable livecd/dvd of your system)"
+     echo " "
+     echo "   sudo rebod dist cdfs"
+     echo "   (to make a distributable livecd/dvd filesystem only)"
+     echo " "
+     echo "   sudo rebod dist iso mycustomofawesome.iso"
+     echo "   (to make a distributable iso named mycustomofawesome.iso but only"
+     echo "    if the cdfs is already present)"
+     echo " "
+     echo "   cdfs and iso options should only be used if you wish to modify something on the"
+     echo "   cd before the iso is created.  An example of this would be to modify the isolinux"
+     echo "   portion of the livecd/dvd"
+     echo " "
+     echo "   sudo rebod clean (to clean up temporary files of rebod)"
+     echo " "
+
+     exit 1
+     ;;
+
+esac
+
+
+cdfs (){
+
+# Step 3 - Create the CD tree in $WORKDIR/ISOTMP
+echo "Checking if the $WORKDIR folder has been created"
+if [ -d "$WORKDIR" ]; then
+rm -rf $WORKDIR/dummysys/var/*
+rm -rf $WORKDIR/dummysys/etc/*
+else
+mkdir -p $WORKDIR/ISOTMP/.disk
+mkdir -p $WORKDIR/ISOTMP/live
+mkdir -p $WORKDIR/ISOTMP/install
+mkdir -p $WORKDIR/ISOTMP/preseed
+mkdir -p $WORKDIR/dummysys/dev
+mkdir -p $WORKDIR/dummysys/etc/live
+mkdir -p $WORKDIR/dummysys/proc
+mkdir -p $WORKDIR/dummysys/tmp
+mkdir -p $WORKDIR/dummysys/sys
+mkdir -p $WORKDIR/dummysys/mnt
+#mkdir -p $WORKDIR/dummysys/media/cdrom
+mkdir -p $WORKDIR/dummysys/media
+mkdir -p $WORKDIR/dummysys/run
+mkdir -p $WORKDIR/dummysys/var
+chmod ug+rwx,o+rwt $WORKDIR/dummysys/tmp
+    echo "Update source list again because previously we cleaned apt cache to copy system folders to dummysys"
+    apt-get update &> /dev/null
+    echo "initializing repo pool"
+
+	mkdir -p $WORKDIR/ISOTMP/pool/contrib/g/glx-alternatives/
+	cd $WORKDIR/ISOTMP/pool/contrib/g/glx-alternatives/
+	apt-get download glx-alternative-mesa &> /dev/null
+	apt-get download glx-alternative-nvidia &> /dev/null
+	apt-get download glx-diversions &> /dev/null
+	apt-get download update-glx &> /dev/null
+	cd - &> /dev/null
+
+	mkdir -p $WORKDIR/ISOTMP/pool/contrib/i/iucode-tool/
+	cd $WORKDIR/ISOTMP/pool/contrib/i/iucode-tool/
+	apt-get download iucode-tool &> /dev/null
+	cd - &> /dev/null
+
+	mkdir -p $WORKDIR/ISOTMP/pool/contrib/n/nvidia-modprobe/
+	cd $WORKDIR/ISOTMP/pool/contrib/n/nvidia-modprobe/
+	apt-get download nvidia-modprobe &> /dev/null
+	cd - &> /dev/null
+
+	mkdir -p $WORKDIR/ISOTMP/pool/contrib/n/nvidia-support/
+	cd $WORKDIR/ISOTMP/pool/contrib/n/nvidia-support/
+	apt-get download nvidia-installer-cleanup &> /dev/null
+	apt-get download nvidia-kernel-common &> /dev/null
+	apt-get download nvidia-support &> /dev/null
+	cd - &> /dev/null
+
+	mkdir -p $WORKDIR/ISOTMP/pool/main/m/mouseemu/
+	cd $WORKDIR/ISOTMP/pool/main/m/mouseemu/
+	apt-get download mouseemu &> /dev/null
+	cd - &> /dev/null
+
+	mkdir -p $WORKDIR/ISOTMP/pool/main/s/setserial/
+	cd $WORKDIR/ISOTMP/pool/main/s/setserial/
+	apt-get download setserial &> /dev/null
+	cd - &> /dev/null
+	
+	mkdir -p $WORKDIR/ISOTMP/pool/main/w/wvdial/
+	cd $WORKDIR/ISOTMP/pool/main/w/wvdial/
+	apt-get download wvdial &> /dev/null
+	cd - &> /dev/null
+	
+	mkdir -p $WORKDIR/ISOTMP/pool/main/w/wvstreams/
+	cd $WORKDIR/ISOTMP/pool/main/w/wvstreams/
+	apt-get download libuniconf4.6 &> /dev/null
+	apt-get download libwvstreams4.6-base &> /dev/null
+	apt-get download libwvstreams4.6-extras &> /dev/null
+	cd - &> /dev/null
+	
+	mkdir -p $WORKDIR/ISOTMP/pool/non-free/a/amd64-microcode/
+	cd $WORKDIR/ISOTMP/pool/non-free/a/amd64-microcode/
+	apt-get download amd64-microcode &> /dev/null
+	cd - &> /dev/null
+		
+	mkdir -p $WORKDIR/ISOTMP/pool/non-free/b/broadcom-sta/
+	cd $WORKDIR/ISOTMP/pool/non-free/b/broadcom-sta/
+	apt-get download broadcom-sta-dkms &> /dev/null
+	cd - &> /dev/null
+	
+	mkdir -p $WORKDIR/ISOTMP/pool/non-free/i/intel-microcode/
+	cd $WORKDIR/ISOTMP/pool/non-free/i/intel-microcode/
+	apt-get download intel-microcode &> /dev/null
+	cd - &> /dev/null
+	
+	mkdir -p $WORKDIR/ISOTMP/pool/non-free/n/nvidia-graphics-drivers/
+	cd $WORKDIR/ISOTMP/pool/non-free/n/nvidia-graphics-drivers/
+	apt-get download nvidia-driver &> /dev/null
+	apt-get download nvidia-egl-common &> /dev/null
+	cd - &> /dev/null
+	
+	mkdir -p $WORKDIR/ISOTMP/pool/non-free/n/nvidia-graphics-drivers-legacy-390xx/
+	cd $WORKDIR/ISOTMP/pool/non-free/n/nvidia-graphics-drivers-legacy-390xx/
+	apt-get download libegl-nvidia-legacy-390xx0 &> /dev/null
+	apt-get download libgl1-nvidia-legacy-390xx-glvnd-glx &> /dev/null
+	apt-get download libglx-nvidia-legacy-390xx0 &> /dev/null
+	apt-get download libnvidia-legacy-390xx-eglcore &> /dev/null
+	apt-get download libnvidia-legacy-390xx-glcore &> /dev/null
+	apt-get download libnvidia-legacy-390xx-ml1 &> /dev/null
+	apt-get download nvidia-legacy-390xx-alternative &> /dev/null
+	apt-get download nvidia-legacy-390xx-driver &> /dev/null
+	apt-get download nvidia-legacy-390xx-driver-bin &> /dev/null
+	apt-get download nvidia-legacy-390xx-driver-libs &> /dev/null
+	apt-get download nvidia-legacy-390xx-egl-icd &> /dev/null
+	apt-get download nvidia-legacy-390xx-kernel-dkms &> /dev/null
+	apt-get download nvidia-legacy-390xx-kernel-support &> /dev/null
+	apt-get download nvidia-legacy-390xx-vdpau-driver &> /dev/null
+	apt-get download xserver-xorg-video-nvidia-legacy-390xx &> /dev/null
+	cd - &> /dev/null	
+	
+	cd $WORKDIR/ISOTMP/
+	
+	mkdir -p $WORKDIR/ISOTMP/dists/buster/contrib/binary-i386/
+	dpkg-scanpackages pool/contrib/ | gzip -k -9f > $WORKDIR/ISOTMP/dists/buster/contrib/binary-i386/Packages.gz
+    gzip -d -k $WORKDIR/ISOTMP/dists/buster/contrib/binary-i386/Packages.gz
+	
+	mkdir -p $WORKDIR/ISOTMP/dists/buster/main/binary-i386/
+	dpkg-scanpackages pool/main/ | gzip -k -9f > $WORKDIR/ISOTMP/dists/buster/main/binary-i386//Packages.gz
+    gzip -d -k $WORKDIR/ISOTMP/dists/buster/main/binary-i386/Packages.gz
+	
+	mkdir -p $WORKDIR/ISOTMP/dists/buster/non-free/binary-i386/
+	dpkg-scanpackages pool/non-free/ | gzip -k -9f > $WORKDIR/ISOTMP/dists/buster/non-free/binary-i386/Packages.gz
+    gzip -d -k $WORKDIR/ISOTMP/dists/buster/non-free/binary-i386/Packages.gz
+	
+	cd - &> /dev/null
+fi
+
+echo "Creating .disk folder"   
+. /etc/lsb-release
+touch $WORKDIR/ISOTMP/.disk/base_installable
+echo "full_cd/single" > $WORKDIR/ISOTMP/.disk/cd_type
+# FIXME: HARDCODE ARCH
+ARCH="i386"
+echo "$DISTRIB_DESCRIPTION 6.0.0 - Release $ARCH ($(date +%Y%m%d.0))" > $WORKDIR/ISOTMP/.disk/info
+echo $LIVECDURL > $WORKDIR/ISOTMP/.disk/release_notes_url
+
+# if this is kde, copy the adept_notifier_auto.desktop to /etc/rebod so the installer can put it back as live-initramfs removes it altogether
+if [ -f /usr/share/autostart/adept_notifier_auto.desktop ]; then
+cp /usr/share/autostart/adept_notifier_auto.desktop /etc/rebod/
+fi
+
+# copy trackerd stuff as live-initramfs disables it
+if [ -f /etc/xdg/autostart/tracker-applet.desktop ]; then
+cp /etc/xdg/autostart/tracker-applet.desktop /etc/rebod
+fi
+if [ -f /etc/xdg/autostart/trackerd.desktop ]; then
+cp /etc/xdg/autostart/trackerd.desktop.xdg /etc/rebod
+fi
+if [ -f /usr/share/autostart/trackerd.desktop ]; then
+cp /usr/share/autostart/trackerd.desktop.share /etc/rebod
+fi
+    log_msg "Copying /var and /etc to temp area and excluding extra files  ... this will take a while so be patient"
+
+    ## new exclusions code
+    # All exclusions from config file
+    ALLEXCLUDES=
+    # Only the exclusions in the /var/ directory
+    VAREXCLUDES=
+    # Only the exclusions in the /etc/ directory
+    ETCEXCLUDES=""
+    if [ "${EXCLUDES}" ] ; then
+      log_msg  "EXCLUDES variable is not empty"
+      for add in ${EXCLUDES} ; do # all exclusions
+        ALLEXCLUDES="${ALLEXCLUDES} --exclude='${add}' "
+      done
+      # echo some stuff to the log
+      log_msg "   ALLEXCLUDES IS:"
+      log_msg "${ALLEXCLUDES}"
+
+      # exclusions for /var/
+      VAREXCLUDES=
+      for addvar in ${EXCLUDES} ; do # exclusions in the var dir
+        addvaryes=`echo ${addvar} | grep '/var/'`
+       if [ "${addvaryes}" ] ; then
+          VAREXCLUDES="${VAREXCLUDES} --exclude='${addvaryes}' "
+        fi
+      done
+      log_msg ""
+      log_msg "   Unedited VAREXCLUDES IS:"
+      log_msg "${VAREXCLUDES}"
+      VAREXCLUDES=`echo ${VAREXCLUDES} | sed 's/\/var\//\//g'` # Cleanup path for var exclusions for rsync
+      log_msg ""
+      log_msg "   Edited VAREXCLUDES IS:"
+      log_msg "${VAREXCLUDES}"
+
+      # exclusions for /etc/
+      ETCEXCLUDES=""
+      for addetc in ${EXCLUDES} ; do # exclusions in the etc dir
+        addetcyes=`echo ${addetc} | grep '/etc/'`
+        if [ "${addetcyes}" ] ; then
+          ETCEXCLUDES="${ETCEXCLUDES} --exclude='${addetcyes}' "
+        fi
+      done
+      log_msg ""
+      log_msg "   Unedited ETCEXCLUDES IS:"
+      log_msg "${ETCEXCLUDES}"
+      ETCEXCLUDES=`echo ${ETCEXCLUDES} | sed 's/\/etc\//\//g'` # Cleanup path for etc exclusions for rsync
+      log_msg ""
+      log_msg "   Edited ETCEXCLUDES IS:"
+      log_msg "${ETCEXCLUDES}"
+    fi
+
+    ## rsync /etc/ & /var/ dirs
+    var_sync="rsync -a --exclude='*.log.[0-9]*' --exclude='*.log.old' --exclude='syslog.[0-9]*' --exclude='[bw]tmp.[0-9]*' --exclude='*.pid'   --exclude='*.bak' --exclude='*.[0-9].gz' --exclude='*.deb' --exclude='kdecache*' --exclude='*~' ${VAREXCLUDES} /var/. ${WORKDIR}/dummysys/var/."
+    log_msg "   syncing /var/ directory using:"
+    log_msg "> ${var_sync}"
+    eval ${var_sync}
+
+    # FIX ME: Having problems coming up a sed here
+    # sanitize /var/cache/debconf/config.dat for ubiquity. 
+    #    Seems to be where it gets the hostname in its dialog
+    # see line 360
+    log_msg "Sanitize debconf/config.dat for ubiquity...before we copy."
+    cp ${WORKDIR}/dummysys/var/cache/debconf/config.dat ${WORKDIR}/dummysys/var/cache/debconf/config.dat.orig
+    perl -00pe 's/(Name: passwd\/username.*?Template: passwd\/username.*Value:) [a-z_][a-z0-9_-]*$/\1/ms' \
+        ${WORKDIR}/dummysys/var/cache/debconf/config.dat.orig > ${WORKDIR}/dummysys/var/cache/debconf/config.dat
+    rm ${WORKDIR}/dummysys/var/cache/debconf/config.dat.orig
+
+    etc_sync="rsync -a ${ETCEXCLUDES} /etc/. ${WORKDIR}/dummysys/etc/."
+    log_msg "   syncing /etc/ directory using:"
+    log_msg "> ${etc_sync}"
+    eval ${etc_sync}
+    #FIXME: should test to see if these exists first
+     touch ${WORKDIR}/dummysys/etc/subgid
+     touch ${WORKDIR}/dummysys/etc/subuid
+    
+    log_msg "done syncing"
+    
+
+#echo "$VAREXCLUDES"
+#rsync --exclude='*.log.*' --exclude='*.pid' --exclude='*.bak' --exclude='*.[0-9].gz' --exclude='*.deb' $VAREXCLUDES-a /var/. $WORKDIR/dummysys/var/.
+#rsync $VAREXCLUDES-a /etc/. $WORKDIR/dummysys/etc/.
+
+if [ "$1" = "dist" ]; then
+rm -f $WORKDIR/dummysys/etc/X11/xorg.conf
+# FIXME: bodhi
+# Live-installer I use fixes this
+# rm -f $WORKDIR/dummysys/etc/resolv.conf
+rm -f $WORKDIR/dummysys/etc/hosts
+rm -f $WORKDIR/dummysys/etc/hostname
+fi
+
+rm -f $WORKDIR/dummysys/etc/mtab
+rm -f $WORKDIR/dummysys/etc/fstab
+rm -f $WORKDIR/dummysys/etc/udev/rules.d/70-persistent*
+ls $WORKDIR/dummysys/var/lib/apt/lists | grep -v ".gpg" | grep -v "lock" | grep -v "partial" | xargs -i rm $WORKDIR/dummysys/var/lib/apt/lists/{} ; 
+
+if [ "$1" = "dist" ]; then
+#fix for buggy debian live setup of gdm and gdm3
+if [ -f $WORKDIR/dummysys/etc/gdm/gdm.conf ]; then
+sed -i -e '/AutomaticLoginEnable/d' $WORKDIR/dummysys/etc/gdm/gdm.conf
+fi
+if [ -f $WORKDIR/dummysys/etc/gdm3/daemon.conf ]; then
+sed -i -e '/AutomaticLoginEnable/d' $WORKDIR/dummysys/etc/gdm3/daemon.conf
+fi
+if [ -f $WORKDIR/dummysys/etc/gdm/gdm.conf-custom ]; then
+echo "  " > $WORKDIR/dummysys/etc/gdm/gdm.conf-custom
+fi
+
+if [ -f /etc/X11/default-display-manager ]; then
+
+# FIXME: Not how I am doing this shit
+if [ "$SHOWICON" = "1" ]; then
+echo "Copying Install Icon to Desktop for live user"
+
+if [ ! -d $WORKDIR/dummysys/etc/skel/Desktop ]; then
+mkdir -p $WORKDIR/dummysys/etc/skel/Desktop
+fi
+
+if [ "`grep kdm /etc/X11/default-display-manager`" = "" ]; then
+cp /usr/share/applications/rebod-installer.desktop $WORKDIR/dummysys/etc/skel/Desktop/
+chmod +x $WORKDIR/dummysys/etc/skel/Desktop/rebod-installer.desktop
+else
+cp /usr/share/applications/rebod-installer-kde.desktop $WORKDIR/dummysys/etc/skel/Desktop/
+chmod +x $WORKDIR/dummysys/etc/skel/Desktop/rebod-installer-kde.desktop
+fi
+
+fi
+
+fi
+
+
+rm -f $WORKDIR/dummysys/etc/group
+rm -f $WORKDIR/dummysys/etc/group-
+rm -f $WORKDIR/dummysys/etc/passwd
+rm -f $WORKDIR/dummysys/etc/passwd-
+rm -f $WORKDIR/dummysys/etc/shadow
+rm -f $WORKDIR/dummysys/etc/shadow-
+rm -f $WORKDIR/dummysys/etc/gshadow
+rm -f $WORKDIR/dummysys/etc/gshadow-
+rm -f $WORKDIR/dummysys/etc/wicd/wired-settings.conf
+rm -f $WORKDIR/dummysys/etc/wicd/wireless-settings.conf
+rm -rf $WORKDIR/dummysys/etc/NetworkManager/system-connections/*
+rm -f $WORKDIR/dummysys/etc/printcap
+rm -f $WORKDIR/dummysys/etc/cups/printers.conf
+touch $WORKDIR/dummysys/etc/printcap
+touch $WORKDIR/dummysys/etc/cups/printers.conf
+rm -rf $WORKDIR/dummysys/var/cache/gdm/*
+rm -rf $WORKDIR/dummysys/var/lib/sudo/*
+rm -rf $WORKDIR/dummysys/var/run/console/*
+rm -f $WORKDIR/dummysys/var/lib/kdm/kdmsts
+rm -f $WORKDIR/dummysys/etc/gdm/gdm.conf-custom
+rm -f $WORKDIR/dummysys/etc/gdm/custom.conf
+rm -f $WORKDIR/dummysys/etc/cups/ssl/server.crt
+rm -f $WORKDIR/dummysys/etc/cups/ssl/server.key
+rm -f $WORKDIR/dummysys/etc/ssh/ssh_host_rsa_key
+rm -f $WORKDIR/dummysys/etc/ssh/ssh_host_dsa_key.pub
+rm -f $WORKDIR/dummysys/etc/ssh/ssh_host_dsa_key
+rm -f $WORKDIR/dummysys/etc/ssh/ssh_host_rsa_key.pub
+
+
+find $WORKDIR/dummysys/var/run $WORKDIR/dummysys/var/log $WORKDIR/dummysys/var/mail $WORKDIR/dummysys/var/spool $WORKDIR/dummysys/var/lock $WORKDIR/dummysys/var/backups $WORKDIR/dummysys/var/tmp -type f -exec rm '{}' \;
+
+#further cleanup
+rm -rf $WORKDIR/dummysys/var/cache/gdm/*
+rm -rf $WORKDIR/dummysys/var/tmp/kdecache*
+rm -rf $WORKDIR/dummysys/var/spool/gfax/*
+rm -rf $WORKDIR/dummysys/var/run/gdm3/*
+rm -rf $WORKDIR/dummysys/var/lib/sudo/*
+rm -rf $WORKDIR/dummysys/var/lib/polkit-1/localauthority/10-vendor.d/10-live-cd.pkla
+
+#fix for live scripts setup Contributed by AnthLee of SalineOS
+rm -rf $WORKDIR/dummysys/var/lib/live/config/*
+
+for i in dpkg.log lastlog mail.log syslog auth.log daemon.log faillog lpr.log mail.warn user.log boot debug mail.err messages wtmp bootstrap.log dmesg kern.log mail.info
+do
+        touch $WORKDIR/dummysys/var/log/${i}
+done
+
+# remove the non system users on the passwd and group files and copy them to dummysys
+
+# see if any temp users left over from previous versions of rebod as the process has now changed
+
+grep '^[^:]*:[^:]*:[5-9][0-9][0-9]:' /etc/passwd | awk -F ":" '{print "/usr/sbin/userdel -f",$1}'> $WORKDIR/cleantmpusers
+. $WORKDIR/cleantmpusers
+
+grep '^[^:]*:[^:]*:[0-9]:' /etc/passwd >> $WORKDIR/dummysys/etc/passwd
+grep '^[^:]*:[^:]*:[0-9][0-9]:' /etc/passwd >> $WORKDIR/dummysys/etc/passwd
+grep '^[^:]*:[^:]*:[0-9][0-9][0-9]:' /etc/passwd >> $WORKDIR/dummysys/etc/passwd
+grep '^[^:]*:[^:]*:[3-9][0-9][0-9][0-9][0-9]:' /etc/passwd >> $WORKDIR/dummysys/etc/passwd
+
+# FIXME: User name hardcoded
+# perms must match /sbin/unix_ckpwd
+# otherwise lock screen does not work in moksha
+cp --preserve=ownership /etc/shadow $WORKDIR/dummysys/etc/shadow
+sed -i "/rbt/d" $WORKDIR/dummysys/etc/shadow
+cp --preserve=ownership /etc/gshadow $WORKDIR/dummysys/etc/gshadow
+sed -i "/ylee:!::/d" $WORKDIR/dummysys/etc/gshadow
+sed -i -e 's/,ylee//g' $WORKDIR/dummysys/etc/gshadow
+sed -i -e 's/ylee//g' $WORKDIR/dummysys/etc/gshadow
+
+grep '^[^:]*:[^:]*:[0-9]:' /etc/group >> $WORKDIR/dummysys/etc/group
+grep '^[^:]*:[^:]*:[0-9][0-9]:' /etc/group >> $WORKDIR/dummysys/etc/group
+grep '^[^:]*:[^:]*:[0-9][0-9][0-9]:' /etc/group >> $WORKDIR/dummysys/etc/group
+grep '^[^:]*:[^:]*:[3-9][0-9][0-9][0-9][0-9]:' /etc/group >> $WORKDIR/dummysys/etc/group
+
+grep '^[^:]*:[^:]*:[5-9][0-9][0-9]:' /etc/passwd | awk -F ":" '{print $1}'> $WORKDIR/tmpusers1
+grep '^[^:]*:[^:]*:[1-9][0-9][0-9][0-9]:' /etc/passwd | awk -F ":" '{print $1}'> $WORKDIR/tmpusers2
+grep '^[^:]*:[^:]*:[1-2][0-9][0-9][0-9][0-9]:' /etc/passwd | awk -F ":" '{print $1}'> $WORKDIR/tmpusers3
+
+cat $WORKDIR/tmpusers1 $WORKDIR/tmpusers2 $WORKDIR/tmpusers3 > $WORKDIR/tmpusers
+
+cat $WORKDIR/tmpusers | while read LINE ;do
+
+	echo $LINE | xargs -i sed -e 's/,{}//g' $WORKDIR/dummysys/etc/group > $WORKDIR/dummysys/etc/group.new1
+	echo $LINE | xargs -i sed -e 's/{},//g' $WORKDIR/dummysys/etc/group.new1 > $WORKDIR/dummysys/etc/group.new2
+	echo $LINE | xargs -i sed -e 's/{}//g' $WORKDIR/dummysys/etc/group.new2 > $WORKDIR/dummysys/etc/group
+
+	rm -rf $WORKDIR/dummysys/etc/group.new1 $WORKDIR/dummysys/etc/group.new2
+
+done
+
+fi
+
+# copy over some of the necessary stuff for the livecd
+
+if [ -f /etc/rebod/preseed/*.seed ]; then
+cp /etc/rebod/preseed/* $WORKDIR/ISOTMP/preseed/
+fi
+
+#BOOT Type selected is GRUB
+if [ "$ISOBOOT" = "GRUB" ]; then
+
+cp /etc/rebod/isolinux/memtest.bin $WORKDIR/ISOTMP/memtest.bin
+
+mkdir -p $WORKDIR/ISOTMP/boot/grub
+mkdir -p $WORKDIR/ISOTMP/usr/share/grub
+cp -a /boot/grub/* $WORKDIR/ISOTMP/boot/grub/
+cp -a /usr/share/grub/* $WORKDIR/ISOTMP/usr/share/grub/
+cp /etc/rebod/grub/grub.cfg $WORKDIR/ISOTMP/boot/grub/grub.cfg
+cp /etc/rebod/grub.png $WORKDIR/ISOTMP/boot/grub/grub.png
+
+sed -i -e 's/__LIVECDLABEL__/'"$LIVECDLABEL"'/g' $WORKDIR/ISOTMP/boot/grub/grub.cfg
+
+if [ ! -d /etc/plymouth ]; then
+
+sed -i -e 's/splash//g' $WORKDIR/ISOTMP/boot/grub/grub.cfg
+
+fi
+
+
+
+else
+#BOOT Type selected is ISOLINUX
+
+mkdir -p $WORKDIR/ISOTMP/isolinux
+
+#if [ `ls /etc/rebod/customisolinux` ]; then
+
+#cp /etc/rebod/customisolinux/* $WORKDIR/ISOTMP/isolinux/
+
+#else
+
+cp /etc/rebod/isolinux/* $WORKDIR/ISOTMP/isolinux/
+
+sed -i -e 's/__LIVECDLABEL__/'"$LIVECDLABEL"'/g' $WORKDIR/ISOTMP/isolinux/menu.cfg
+
+if [ ! -d /etc/plymouth ]; then
+
+sed -i -e 's/splash//g' $WORKDIR/ISOTMP/isolinux/live.cfg
+
+fi
+
+fi
+
+#fi
+
+sleep 1
+
+
+# Step 4 - Prepare live.conf depending on whether this is a backup or dist
+
+if [ "$1" = "backup" ]; then
+LIVEUSER="`grep '^[^:]*:[^:]*:1000:' /etc/passwd | awk -F ":" '{ print $1 }'`"
+
+#fix Thunar volmanrc for live
+for i in `ls -d /home/*`; do
+
+if [ /$i/.config/Thunar/volmanrc ]; then
+  sed -i -e 's/TRUE/FALSE/g' /$i/.config/Thunar/volmanrc
+  cp -f /$i/.config/volmanrc /root/.config/Thunar/volmanrc
+fi
+
+done
+
+fi
+if [ ! -d /etc/live/config.conf.d ]; then
+mkdir -p /etc/live/config.conf.d
+fi
+
+echo "LIVE_USERNAME=\"$LIVEUSER\"" > /etc/live/config.conf.d/live-setup.conf
+echo "LIVE_HOSTNAME=\"$LIVEUSER\"" >> /etc/live/config.conf.d/live-setup.conf
+echo "LIVE_USER_FULLNAME=\"$LIVEUSER\"" >> /etc/live/config.conf.d/live-setup.conf
+echo "LIVE_USER_DEFAULT_GROUPS=\"audio cdrom dip floppy video plugdev netdev powerdev scanner bluetooth fuse sudo\"" >> /etc/live/config.conf.d/live-setup.conf
+if [ "$1" = "backup" ]; then
+echo "export LIVE_NOCONFIGS=\"user-setup,sudo,locales,locales-all,tzdata,gdm,gdm3,kdm,lightdm,lxdm,nodm,slim,keyboard-configuration,gnome-panel-data,gnome-power-manager,gnome-screensaver,kde-services,debian-installer-launcher,login\"" >> /etc/live/config.conf.d/live-setup.conf
+fi
+
+cp /etc/live/config.conf $WORKDIR/dummysys/etc/live/
+
+sleep 1
+
+#fix for policy kit in live
+sed -i -e 's/ResultAny=no/ResultAny=yes/g' /lib/live/config/1100-policykit
+sed -i -e 's/ResultInactive=no/ResultInactive=yes/g' /lib/live/config/1100-policykit
+
+
+
+echo "Setting up live options for $1 mode"
+
+# make a new initial ramdisk including the live scripts
+update-initramfs -t -c -k $(uname -r)
+
+echo "Copying your kernel and initrd for the livecd"
+cp /boot/vmlinuz-$(uname -r) $WORKDIR/ISOTMP/live/vmlinuz
+cp /boot/initrd.img-$(uname -r) $WORKDIR/ISOTMP/live/initrd.img
+# Bodhi changes
+cp /boot/memtest86+.bin $WORKDIR/ISOTMP/live/memtest
+dpkg-query -W --showformat='${Package} ${Version}\n' > $WORKDIR/ISOTMP/live/filesystem.packages
+cp /etc/rebod/customisolinux/filesystem.packages-remove $WORKDIR/ISOTMP/live/filesystem.packages-remove
+sleep 1
+#-------END Bodhi changes
+
+# Step 5 - Make filesystem.squashfs
+
+if [ -f $WORKDIR/rebod.log ]; then
+rm -f $WORKDIR/rebod.log
+touch $WORKDIR/rebod.log
+fi
+
+
+if [ -f $WORKDIR/ISOTMP/live/filesystem.squashfs ]; then
+rm -f $WORKDIR/ISOTMP/live/filesystem.squashfs
+fi
+
+echo "Creating filesystem.squashfs   ... this will take a while so be patient"
+
+if [ "$SQUASHFSOPTS" = "" ]; then
+SQUASHFSOPTS="-no-recovery -always-use-fragments -b 1M"
+fi
+
+REALFOLDERS=""
+
+for d in `ls -d $WORKDIR/dummysys/*`; do
+REALFOLDERS="$REALFOLDERS $d"
+done
+
+if [ "$1" = "backup" ]; then
+
+for d in `ls / | grep -v etc | grep -v run | grep -v tmp | grep -v sys | grep -v var \
+| grep -v dev | grep -v media | grep -v mnt | grep -v lost+found | grep -v proc`; do
+REALFOLDERS="$REALFOLDERS /$d"
+done
+
+else
+
+for d in `ls / | grep -v etc | grep -v run | grep -v tmp | grep -v sys | grep -v var \
+| grep -v dev | grep -v media | grep -v mnt | grep -v lost+found | grep -v proc \
+| grep -v home`; do
+REALFOLDERS="$REALFOLDERS /$d"
+done
+
+fi
+
+mksquashfs $REALFOLDERS $WORKDIR/ISOTMP/live/filesystem.squashfs $SQUASHFSOPTS -e /boot/efi/EFI /boot/grub $BASEWORKDIR $EXCLUDES 2>>$WORKDIR/rebod.log
+    sleep 1
+    
+if [ "$1" = "backup" ]; then
+#return Thunar volmanrc back to normal
+for i in `ls -d /home/*`; do
+
+if [ /$i/.config/Thunar/volmanrc ]; then
+  sed -i -e 's/FALSE/TRUE/g' /$i/.config/Thunar/volmanrc
+  cp -f /$i/.config/volmanrc /root/.config/Thunar/volmanrc
+fi
+
+done
+
+fi
+
+sleep 1
+
+#add some stuff the log in case of problems so I can troubleshoot it easier
+echo "------------------------------------------------------" >>$WORKDIR/rebod.log
+echo "Mount information" >>$WORKDIR/rebod.log
+mount >>$WORKDIR/rebod.log
+echo "------------------------------------------------------" >>$WORKDIR/rebod.log
+echo "df information" >>$WORKDIR/rebod.log
+df -h >>$WORKDIR/rebod.log
+echo "------------------------------------------------------" >>$WORKDIR/rebod.log
+echo "/etc/rebod.conf info" >>$WORKDIR/rebod.log
+cat /etc/rebod.conf >>$WORKDIR/rebod.log
+echo "------------------------------------------------------" >>$WORKDIR/rebod.log
+echo "/etc/live/config.conf.d/live-setup.conf info" >>$WORKDIR/rebod.log
+cat /etc/live/config.conf.d/live-setup.conf >>$WORKDIR/rebod.log
+echo "------------------------------------------------------" >>$WORKDIR/rebod.log
+echo "/etc/passwd info" >>$WORKDIR/rebod.log
+cat $WORKDIR/dummysys/etc/passwd >>$WORKDIR/rebod.log
+echo "------------------------------------------------------" >>$WORKDIR/rebod.log
+echo "/etc/group info" >>$WORKDIR/rebod.log
+cat $WORKDIR/dummysys/etc/group >>$WORKDIR/rebod.log
+echo "------------------------------------------------------" >>$WORKDIR/rebod.log
+echo "/etc/skel info" >>$WORKDIR/rebod.log
+find /etc/skel/ >>$WORKDIR/rebod.log
+echo "------------------------------------------------------" >>$WORKDIR/rebod.log
+echo "/etc/X11/default-display-manager info" >>$WORKDIR/rebod.log
+cat /etc/X11/default-display-manager >>$WORKDIR/rebod.log
+echo "------------------------------------------------------" >>$WORKDIR/rebod.log
+echo "rebod Version info" >>$WORKDIR/rebod.log
+cat /etc/rebod/rebod.version >>$WORKDIR/rebod.log
+echo "-----------------------------------------------------" >>$WORKDIR/rebod.log
+echo "Command-line options = $@" >>$WORKDIR/rebod.log
+echo "------------------------------------------------------" >>$WORKDIR/rebod.log
+
+
+sleep 1
+
+#checking the size of the compressed filesystem to ensure it meets the iso9660 spec for a single file" 
+SQUASHFSSIZE=`ls -s $WORKDIR/ISOTMP/live/filesystem.squashfs | awk -F " " '{print $1}'`
+if [ "$SQUASHFSSIZE" -gt "3999999" ]; then
+echo " The compressed filesystem is larger than the iso9660 specification allows for a single file. You must try to reduce the amount of data you are backing up and try again."
+echo " The compressed filesystem is larger than the iso9660 specification allows for a single file. You must try to reduce the amount of data you are backing up and try again.">>$WORKDIR/rebod.log
+
+exit 1
+fi
+
+
+}
+
+
+				
+iso (){
+
+CREATEISO="`which mkisofs`"
+if [ "$CREATEISO" = "" ]; then
+CREATEISO="`which genisoimage`"
+fi
+
+# check to see if the cd filesystem exists
+
+if [ ! -f "$WORKDIR/ISOTMP/live/filesystem.squashfs" ]; then
+echo "The cd filesystem is missing.  Either there was a problem creating the compressed filesystem or you are trying to run sudo rebod dist iso before sudo rebod dist cdfs"
+echo "The cd filesystem is missing.  Either there was a problem creating the compressed filesystem or you are trying to run sudo rebod dist iso before sudo rebod dist cdfs" >>$WORKDIR/rebod.log
+
+exit 1
+fi
+
+#checking the size of the compressed filesystem to ensure it meets the iso9660 spec for a single file" 
+SQUASHFSSIZE=`ls -s $WORKDIR/ISOTMP/live/filesystem.squashfs | awk -F " " '{print $1}'`
+if [ "$SQUASHFSSIZE" -gt "3999999" ]; then
+echo " The compressed filesystem is larger than the iso9660 specification allows for a single file. You must try to reduce the amount of data you are backing up and try again."
+echo " The compressed filesystem is larger than the iso9660 specification allows for a single file. You must try to reduce the amount of data you are backing up and try again.">>$WORKDIR/rebod.log
+
+exit 1
+fi
+
+    # Step 7 - Make md5sum.txt for the files on the livecd - this is used during the
+    # checking function of the livecd
+    echo "Creating md5sum.txt for the livecd/dvd"
+    cd $WORKDIR/ISOTMP && find . -type f -print0 | xargs -0 md5sum > md5sum.txt
+
+    #isolinux mode
+
+    # remove files that change and cause problems with checking the disk
+    sed -e '/isolinux/d' md5sum.txt > md5sum.txt.new
+    sed -e '/md5sum/d' md5sum.txt.new > md5sum.txt
+    rm -f md5sum.txt.new &> /dev/null
+    mv md5sum.txt MD5SUMS
+    sleep 1
+
+#isolinux mode
+
+sleep 1
+
+# Step 6 - Make the ISO file
+
+if [ "$ISOBOOT" = "GRUB" ]; then
+
+echo "Creating $CUSTOMISO in $WORKDIR using grub-mkrescue"
+echo "Creating $CUSTOMISO in $WORKDIR using grub-mkrescue" >>$WORKDIR/rebod.log
+grub-mkrescue -o $WORKDIR/$CUSTOMISO $WORKDIR/ISOTMP/ 2>>$WORKDIR/rebod.log 1>>$WORKDIR/rebod.log
+
+
+else
+echo "Creating $CUSTOMISO in $WORKDIR using $CREATEISO"
+echo "Creating $CUSTOMISO in $WORKDIR using $CREATEISO" >>$WORKDIR/rebod.log
+$CREATEISO    \
+ -quiet \
+ -r    \
+ -V "$LIVECDLABEL"    \
+ -cache-inodes    \
+ -J    \
+ -l    \
+ -b isolinux/isolinux.bin    \
+ -c isolinux/boot.cat    \
+ -no-emul-boot    \
+ -boot-load-size 4    \
+ -boot-info-table    \
+ -o $WORKDIR/$CUSTOMISO "$WORKDIR/ISOTMP" 2>>$WORKDIR/rebod.log 1>>$WORKDIR/rebod.log
+
+# create hybrid iso so it can be dd installed to a usb flash drive
+
+echo "Making the iso into a hybrid image so it can be imaged to a usb key or burned to optical media"
+
+isohybrid $WORKDIR/$CUSTOMISO
+fi
+# create the md5 sum file so the user doesn't have to - this is good so the iso file can later be tested to ensure it hasn't become corrupted
+
+
+echo "Creating $CUSTOMISO.md5 in $WORKDIR"
+echo "Creating $CUSTOMISO.md5 in $WORKDIR" >>$WORKDIR/rebod.log
+
+cd $WORKDIR
+md5sum $CUSTOMISO > $CUSTOMISO.md5
+
+sleep 1
+echo "Creating $CUSTOMISO.sha256 in $WORKDIR"
+sha256sum $CUSTOMISO > $CUSTOMISO.sha256
+sleep 1
+
+echo "$WORKDIR/$CUSTOMISO is ready to be burned or tested in a virtual machine."
+echo " "
+echo "Check the size and if it is larger than 700MB you will need to burn it to a dvd"
+echo " "
+ls -hs $WORKDIR/$CUSTOMISO
+ls -hs $WORKDIR/$CUSTOMISO >> $WORKDIR/rebod.log
+echo " " 
+echo "It is recommended to run 'sudo rebod clean' once you have burned and tested the $CUSTOMISO"
+echo " "
+
+}
+
+# check to see if either iso or cdfs options have been invoked and proceed accordingly
+
+if [ "$2" = "iso" ]; then
+	iso $@
+elif [ "$2" = "cdfs" ]; then
+	cdfs $@
+else
+	cdfs $@
+	iso $@
+fi
+
+exit 0

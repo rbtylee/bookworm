@@ -1,0 +1,154 @@
+--- NOW.pkgs	2023-12-03 09:00:33.854021950 -0500
++++ broke.pkgs	2023-12-03 09:04:54.036292000 -0500
+@@ -37,6 +37,7 @@
+ bodhi-quickstart
+ bodhi-settings
+ bodhi-skel
++bodhi-slick-theme
+ bodhi-theme-moksha-e17gtk
+ bodhi-theme-moksha-green
+ bodhilinux-keyring
+@@ -125,6 +126,7 @@
+ gdisk
+ geany-common
+ geany
++genisoimage
+ gettext-base
+ gir1.2-atk-1.0
+ gir1.2-freedesktop
+@@ -133,6 +135,8 @@
+ gir1.2-gtk-3.0
+ gir1.2-harfbuzz-0.0
+ gir1.2-pango-1.0
++git-man
++git
+ glib-networking-common
+ glib-networking-services
+ glib-networking
+@@ -140,6 +144,8 @@
+ gnupg-l10n
+ gnupg-utils
+ gnupg
++gparted-common
++gparted
+ gpg-agent
+ gpg-wks-client
+ gpg-wks-server
+@@ -187,6 +193,7 @@
+ isc-dhcp-client
+ isc-dhcp-common
+ iso-codes
++isoquery
+ iucode-tool
+ iw
+ kbd
+@@ -328,6 +335,7 @@
+ libencode-locale-perl
+ libepoxy0
+ libept1.6.0
++liberror-perl
+ libevdev2
+ libevent-2.1-7
+ libexif12
+@@ -388,6 +396,8 @@
+ libglx-mesa0
+ libglx0
+ libgmp10
++libgnomekbd-common
++libgnomekbd8
+ libgnutls30
+ libgoa-1.0-0b
+ libgoa-1.0-common
+@@ -493,6 +503,7 @@
+ liblwp-protocol-https-perl
+ liblz4-1
+ liblzma5
++liblzo2-2
+ libmagic-mgc
+ libmagic1
+ libmailtools-perl
+@@ -731,6 +742,8 @@
+ libx264-164
+ libx265-199
+ libxapian30
++libxapp-gtk3-module
++libxapp1
+ libxatracker2
+ libxau6
+ libxaw7
+@@ -798,7 +811,6 @@
+ libzstd1
+ libzvbi-common
+ libzvbi0
+-lightdm-gtk-greeter
+ lightdm
+ linux-base
+ linux-compiler-gcc-12-x86
+@@ -809,6 +821,13 @@
+ linux-image-amd64
+ linux-kbuild-6.1
+ linux-libc-dev
++live-boot-doc
++live-boot-initramfs-tools
++live-boot
++live-config-doc
++live-config-systemd
++live-config
++live-tools
+ lm-sensors
+ locales
+ login
+@@ -825,6 +844,7 @@
+ mawk
+ media-types
+ memtest86+
++menu
+ mesa-utils-bin
+ mesa-utils
+ mesa-va-drivers
+@@ -890,9 +910,11 @@
+ python3.11
+ python3
+ readline-common
++rebod
+ resolvconf
+ rfkill
+ rpcsvc-proto
++rsync
+ rtkit
+ runit-helper
+ samba-libs
+@@ -900,9 +922,12 @@
+ sensible-utils
+ sgml-base
+ shared-mime-info
++slick-greeter
+ sound-theme-freedesktop
++squashfs-tools
+ sudo
+ synaptic
++syslinux-utils
+ systemd-sysv
+ systemd-timesyncd
+ systemd
+@@ -928,10 +953,12 @@
+ usb-modeswitch-data
+ usb-modeswitch
+ usbutils
++user-setup
+ usr-is-merged
+ util-linux-extra
+ util-linux-locales
+ util-linux
++uuid-runtime
+ va-driver-all
+ vdpau-driver-all
+ wamerican
+@@ -943,6 +970,7 @@
+ x11-utils
+ x11-xkb-utils
+ x11-xserver-utils
++xapp-sn-watcher
+ xapps-common
+ xauth
+ xclip

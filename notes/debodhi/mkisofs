@@ -1,0 +1,22 @@
+xorriso -as mkisofs -R -r -J 
+-isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin 
+-partition_offset 16
+-cache-inodes 
+-iso-level 3 
+-c isolinux/boot.cat
+-b isolinux/isolinux.bin 
+-no-emul-boot 
+-boot-load-size 4 
+-boot-info-table 
+-eltorito-alt-boot 
+-e boot/grub/efi.img 
+-no-emul-boot 
+-isohybrid-gpt-basdat 
+-isohybrid-apm-hfsplus 
+-o live-image-amd64.hybrid.iso binary
+
+-joliet-long 
+-l 
+-A "LMDE Live" -p "live-build 20230502; https://salsa.debian.org/live-team/live-build" 
+-publisher "Linux Mint" -V "LMDE 6 Cinnamon 64-bit" 
+--modification-date=2023092216260600 

@@ -1,0 +1,28 @@
+
+      log_msg "Cleaning up passwd, group, shadow and gshadow files for the live system"
+
+      grep '^[^:]*:[^:]*:[0-9]:' /etc/passwd > ${WORKDIR}/dummysys/etc/passwd
+      grep '^[^:]*:[^:]*:[0-9][0-9]:' /etc/passwd >> ${WORKDIR}/dummysys/etc/passwd
+      grep '^[^:]*:[^:]*:[0-9][0-9][0-9]:' /etc/passwd >> ${WORKDIR}/dummysys/etc/passwd
+      grep '^[^:]*:[^:]*:[3-9][0-9][0-9][0-9][0-9]:' /etc/passwd >> ${WORKDIR}/dummysys/etc/passwd
+
+      grep '^[^:]*:[^:]*:[0-9]:' /etc/group > ${WORKDIR}/dummysys/etc/group
+      grep '^[^:]*:[^:]*:[0-9][0-9]:' /etc/group >> ${WORKDIR}/dummysys/etc/group
+      grep '^[^:]*:[^:]*:[0-9][0-9][0-9]:' /etc/group >> ${WORKDIR}/dummysys/etc/group
+      grep '^[^:]*:[^:]*:[3-9][0-9][0-9][0-9][0-9]:' /etc/group >> ${WORKDIR}/dummysys/etc/group
+
+      grep '^[^:]*:[^:]*:[5-9][0-9][0-9]:' /etc/passwd | awk -F ":" '{print $1}'> ${WORKDIR}/tmpusers1
+      grep '^[^:]*:[^:]*:[1-9][0-9][0-9][0-9]:' /etc/passwd | awk -F ":" '{print $1}'> ${WORKDIR}/tmpusers2
+      grep '^[^:]*:[^:]*:[1-2][0-9][0-9][0-9][0-9]:' /etc/passwd | awk -F ":" '{print $1}'> ${WORKDIR}/tmpusers3
+
+      cat ${WORKDIR}/tmpusers1 ${WORKDIR}/tmpusers2 ${WORKDIR}/tmpusers3 > ${WORKDIR}/tmpusers
+      rm -f ${WORKDIR}/tmpusers[0-9] &> /dev/null
+
+      cat ${WORKDIR}/tmpusers | while read LINE ;do
+        echo ${LINE} | xargs -i sed -e 's/,{}$//g' ${WORKDIR}/dummysys/etc/group > ${WORKDIR}/dummysys/etc/group.new1
+        echo ${LINE} | xargs -i sed -e 's/,{},/,/g' ${WORKDIR}/dummysys/etc/group.new1 > ${WORKDIR}/dummysys/etc/group.new2
+        echo ${LINE} | xargs -i sed -e 's/:{}$/:/g' ${WORKDIR}/dummysys/etc/group.new2 > ${WORKDIR}/dummysys/etc/group.new3
+        echo ${LINE} | xargs -i sed -e 's/:{},/:/g' ${WORKDIR}/dummysys/etc/group.new3 > ${WORKDIR}/dummysys/etc/group
+        rm -f ${WORKDIR}/dummysys/etc/group.new* &> /dev/null
+      done
+    fi

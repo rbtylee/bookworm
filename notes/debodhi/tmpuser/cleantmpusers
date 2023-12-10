@@ -1,0 +1,3 @@
+/usr/sbin/userdel -f systemd-network
+/usr/sbin/userdel -f systemd-timesync
+/usr/sbin/userdel -f polkitd
