@@ -1,4 +1,4 @@
-rebod breaks pkexec: pkexec asks for the root account's password. But the account is locked, it doesn't have a password. Therefore it fails. It should ask for user password
+Bullseye version of rebod breaks pkexec: pkexec asks for the root account's password. But the account is locked, it doesn't have a password. Therefore it fails. It should ask for user password
 
 running rebod:
   userdel: user systemd-timesync is currently used by process 296
