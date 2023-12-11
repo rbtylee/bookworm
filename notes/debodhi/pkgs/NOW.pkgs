@@ -1,4 +1,5 @@
 Listing...
+accountsservice
 acl
 acpi
 adduser
@@ -37,6 +38,7 @@ bodhi-plymouth-theme
 bodhi-quickstart
 bodhi-settings
 bodhi-skel
+bodhi-slick-theme
 bodhi-theme-moksha-e17gtk
 bodhi-theme-moksha-green
 bodhilinux-keyring
@@ -70,6 +72,7 @@ dbus
 dconf-gsettings-backend
 dconf-service
 debconf-i18n
+debconf-utils
 debconf
 debian-archive-keyring
 debian-system-adjustments
@@ -125,6 +128,7 @@ gcc
 gdisk
 geany-common
 geany
+genisoimage
 gettext-base
 gir1.2-atk-1.0
 gir1.2-freedesktop
@@ -133,6 +137,8 @@ gir1.2-glib-2.0
 gir1.2-gtk-3.0
 gir1.2-harfbuzz-0.0
 gir1.2-pango-1.0
+git-man
+git
 glib-networking-common
 glib-networking-services
 glib-networking
@@ -140,6 +146,8 @@ gnome-icon-theme
 gnupg-l10n
 gnupg-utils
 gnupg
+gparted-common
+gparted
 gpg-agent
 gpg-wks-client
 gpg-wks-server
@@ -187,10 +195,12 @@ iputils-ping
 isc-dhcp-client
 isc-dhcp-common
 iso-codes
+isolinux
 iucode-tool
 iw
 kbd
 keyboard-configuration
+keyutils
 klibc-utils
 kmod
 laptop-detect
@@ -199,6 +209,7 @@ less
 libaa1
 libaacs0
 libabsl20220623
+libaccountsservice0
 libacl1
 libalgorithm-diff-perl
 libalgorithm-diff-xs-perl
@@ -254,6 +265,7 @@ libbluray2
 libbpf1
 libbrotli1
 libbsd0
+libburn4
 libbz2-1.0
 libc-bin
 libc-dev-bin
@@ -328,6 +340,7 @@ libenchant-2-2
 libencode-locale-perl
 libepoxy0
 libept1.6.0
+liberror-perl
 libevdev2
 libevent-2.1-7
 libexif12
@@ -388,6 +401,8 @@ libglvnd0
 libglx-mesa0
 libglx0
 libgmp10
+libgnomekbd-common
+libgnomekbd8
 libgnutls30
 libgoa-1.0-0b
 libgoa-1.0-common
@@ -454,6 +469,8 @@ libio-stringy-perl
 libip4tc2
 libipc-system-simple-perl
 libisl23
+libisoburn1
+libisofs6
 libitm1
 libjack-jackd2-0
 libjansson4
@@ -467,6 +484,7 @@ libjson-c5
 libjson-glib-1.0-0
 libjson-glib-1.0-common
 libjsoncpp25
+libjte2
 libjxl0.7
 libk5crypto3
 libkeyutils1
@@ -493,6 +511,7 @@ liblwp-mediatypes-perl
 liblwp-protocol-https-perl
 liblz4-1
 liblzma5
+liblzo2-2
 libmagic-mgc
 libmagic1
 libmailtools-perl
@@ -731,6 +750,8 @@ libx11-xcb1
 libx264-164
 libx265-199
 libxapian30
+libxapp-gtk3-module
+libxapp1
 libxatracker2
 libxau6
 libxaw7
@@ -798,17 +819,23 @@ libz3-4
 libzstd1
 libzvbi-common
 libzvbi0
-lightdm-gtk-greeter
 lightdm
 linux-base
 linux-compiler-gcc-12-x86
-linux-headers-6.1.0-13-amd64
-linux-headers-6.1.0-13-common
+linux-headers-6.1.0-15-amd64
+linux-headers-6.1.0-15-common
 linux-headers-amd64
-linux-image-6.1.0-13-amd64
+linux-image-6.1.0-15-amd64
 linux-image-amd64
 linux-kbuild-6.1
 linux-libc-dev
+live-boot-doc
+live-boot-initramfs-tools
+live-boot
+live-config-doc
+live-config-systemd
+live-config
+live-tools
 lm-sensors
 locales
 login
@@ -890,9 +917,11 @@ python3.11-minimal
 python3.11
 python3
 readline-common
+rebod
 resolvconf
 rfkill
 rpcsvc-proto
+rsync
 rtkit
 runit-helper
 samba-libs
@@ -900,9 +929,13 @@ sed
 sensible-utils
 sgml-base
 shared-mime-info
+slick-greeter
 sound-theme-freedesktop
+squashfs-tools
 sudo
 synaptic
+syslinux-common
+syslinux-utils
 systemd-sysv
 systemd-timesyncd
 systemd
@@ -928,10 +961,12 @@ upower
 usb-modeswitch-data
 usb-modeswitch
 usbutils
+user-setup
 usr-is-merged
 util-linux-extra
 util-linux-locales
 util-linux
+uuid-runtime
 va-driver-all
 vdpau-driver-all
 wamerican
@@ -943,6 +978,7 @@ x11-common
 x11-utils
 x11-xkb-utils
 x11-xserver-utils
+xapp-sn-watcher
 xapps-common
 xauth
 xclip
@@ -960,6 +996,7 @@ xfonts-utils
 xkb-data
 xml-core
 xorg-docs-core
+xorriso
 xserver-common
 xserver-xorg-core
 xserver-xorg-input-all
