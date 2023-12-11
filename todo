@@ -6,6 +6,10 @@ pkexec should not display in LIVE
 calamares installer not working
 repo on ISO
 
+Current default time zone: 'US/Eastern'
+Local time is now:      Mon Dec 11 07:58:01 EST 2023.
+Universal Time is now:  Mon Dec 11 12:58:01 UTC 2023.
+Run 'dpkg-reconfigure tzdata' if you wish to change it.
 
 DONE MAYBE
 
