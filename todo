@@ -1,11 +1,24 @@
+
+
+make a debian version of bodhi-iso-profile
+Rebod fix and go over ISO Repo
+Rebod fix Bodhi First boot
+Rebod change folder structure and package with latest changes
+Rebod the indentation and code is a fucking mess
+Make sure all ISO menu options work for the ISO menu at boot
+Check and fix minor issues like thunar open terminal here
+Make sure localizations work in installer
+live-installer slideshow
+Install/create a bodhi MOTD pkg
+Bodhi version of arandr
+
 Packaging for standard ISO 686
 
 bodhi-skel open terminal here in thunar broken 
-MOTD install
 pkexec should not display in LIVE
 calamares installer not working
 repo on ISO
-live-installer
+
 
 Current default time zone: 'US/Eastern'
 Local time is now:      Mon Dec 11 07:58:01 EST 2023.
