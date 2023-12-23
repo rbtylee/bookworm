@@ -1,0 +1,43 @@
+#000  Be Sure lock screen works notes on /etc/shadow perms
+#001  Presentation screen disabled on ISO profile
+#002  check for rc pkgs 
+#003  elementary settings scale theme and icon properly set
+#004  /etc/passwd, shadow, gshadow, group all look right
+#005  $PATH properly set
+#006  Bash aliases properly set (bookworm)
+#000: Integrity check	
+#001: ISO label	
+#002: Live installer slideshow
+#010  Clean root dir
+#011  filesystem.package-remove working
+#012  no autoremove apps on install or deboprhaned
+#038: Installation with custom-partitioning	
+#038: Installation with encrypted HD	
+#040: sudo and pkexec on ISO and installed
+#041: Repo on cd working ?
+#105: Boot Hybrid ISO via USB ?	
+#105: Bodhi Grub Menu properly displayed
+#106: GRUB rescue
+#107: test all options on ISO menu
+#108: UEIF ISO boot
+#109: UEIF install
+#110: UEIF ISO menu
+#003: Plymouth text theme	
+#004: Plymouth default theme	
+#005: Network Manager	
+#019: LSB and info file	
+#020: Ctrl, Alt, Backspace	?
+#036: Localized installation	
+#041: apt sources	
+#043: apt policy	
+#044: apt update	
+#045: repository keys	
+#047: File associations
+#048: Journctl and systemd errors, boot and services
+#localized installation works
+# localized installer works
+# policykit for leafpad, thunar work
+# Thunar setbackground works
+# patched arandr
+
+#039: Other OS in Grub	
