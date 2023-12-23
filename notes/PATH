@@ -2,3 +2,71 @@ look at /etc/profile and /etc/environment in Jammy and bookworm
 
 on this bookworm install we have by default:
   /usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games
+
+enigma9o7 — Yesterday at 7:41 PM
+Ok finally found something new.  /usr/sbin is not in path, which is in path in other bodhi versions.
+(which includes, among other things, the reboot command, which does not require root) 
+
+ylee — Yesterday at 11:59 PM
+Yes the Path on Debian by default differs from the path on ubuntu by default. Debian users often say this is a security issue. 
+
+
+There are a number of small differences between Debian and Ubuntu configuration that lead to Debian trolls claiming Debian is more secure than Ubuntu. Ubuntu goes for 'more user friendly for desktop users.'
+
+
+In /etc/login.defs for both debian and Ubuntu one has 
+# *REQUIRED*  The default PATH settings, for superuser and normal users.
+#
+# (they are minimal, add the rest in the shell startup files)
+ENV_SUPATH    PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ENV_PATH    PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games
+But debian /etc/environment is empty while Ubuntu's version has 
+PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin"
+This explains why PATH differs for normal users and superusers in the two distros.
+
+
+Now as to claim that Debian did this for a security reason. ... that does not appear to be true. In the Debian Policy is written that Debian follows the File Hierarchy Standard version 2.3. Note #19 on the standard says 
+The division between /bin and /sbin was not created for security reasons or to prevent users from seeing the operating system, but to provide a good partition between binaries that everyone uses and ones that are primarily used for administration tasks. There is no inherent security advantage in making /sbin off-limits for users.
+
+And in a thread on the debian mailing list one finds 
+consider the Unix practice of listing its
+administrative commands (system management commands) in a separate
+section of its documentation (section 8 of the man pages).  This was
+done so that ordinary users of a Unix system can focus on section 1,
+the user's commands, and not worry about system administration.  If
+these administrative commands are not documented in the same section as
+ordinary commands, I think that it is sensible to place them in their
+own directory.
+
+Please don't tell me that there is no precedent in Unix for separating
+binaries based on their intended users.  That is simply not true.
+
+> I guess I propose that either of two things happen:
+
+> 1) /sbin and /usr/sbin are put into everyone's path.
+
+If a user periodically needs to perform such administrative tasks under his user account, he can modify the path on that account.  That's pretty easy to do.  There are many users, however, who will never need to run
+any of these administrative commands (even you must admit that), and therefore, do not need them in their path.
+
+That is not necessary.  It eliminates the whole point of separating the binaries in the first place.
+...
+If you want to place /sbin and /usr/sbin in your path on your system, or place them in the everybody's path on the systems that you administrate, then fine; that's your own business, and it's not very difficult to
+do.  Please however, do not stick these two directories in MY path just because you fail to understand the difference between administrative work and ordinary work.
+ylee — Today at 1:08 AM
+To stick with pure Debian defaults there are two solutions to this issue
+1) run these admin commands using sudo. I have been doing this for years myself as many (non-Ubuntu) distros I have played with over the years do not alter the PATH like Ubuntu does to allow normal users to run these admin programs without sudo (or becoming root)
+ylee — Today at 1:17 AM
+2) Use the full path of the admin command. However since the sbin directories are not in the PATH the which command may not work as one might wish: 
+which reboot
+ fails but 
+sudo which reboot 
+ works
+All in all since deBodhi has a Debian base perhaps it is best to stick with most of the default Debian configurations. This will please old school debian users but confuse perhaps long time Bodhi or Ubuntu users. Plus it adds to those who do support on the forums Discord or write wikis.
+﻿
+REFERENCE
+
+[Re: /etc/profile should include sbin in PATH](https://lists.debian.org/debian-user/1999/12/msg02905.html)
+[Filesystem Hierarchy Standard](https://www.pathname.com/fhs/pub/fhs-2.3.html#FTN.AEN1058)
+[Debian Bug report logs - #905564](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=905564)
+[How set PATH for all users in Debian?](https://serverfault.com/questions/166383/how-set-path-for-all-users-in-debian)
+[How to correctly add a path to PATH](https://unix.stackexchange.com/questions/26047/how-to-correctly-add-a-path-to-path/26059#26059)
