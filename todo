@@ -1,4 +1,23 @@
+BOOKWORM-64 VM
+------------------------------------------------------------------------
+Check machine ID
+
+live installer go over the post and pre remove shit in debian
+find code that makes systemd shit and remove 
+make sure ISO screenshot does not open in image-magic
+ISO
+------------------------------------------------------------------------
+slick theme in all repos check
+arandr
+metapackages for debian on appcenter
+
+DeepL for localizations ?
+
 redo live installer deb file to fix desktop file 2 comment fields and wrong icon
+/etc/shadow root:! i think breaks grub recue mode
+	should be sed -i -e 's/root:x:/root:*:/g' /etc/shadow is live installer doing this or fix firstbooot
+	    # Lock and delete root password
+        self.do_run_in_chroot("passwd -dl root")
 ubiquity ison is missing 
 Only have one locale installed :(
 
@@ -9,14 +28,31 @@ Rebod change folder structure and package with latest changes
 Rebod the indentation and code is a fucking mess
 Rebod go over pkg-remove files
 Rebod add gpg signing (?)
+Rebod add live policykit/pkexec file fix
 Carefully go over all installed pkgs
 Make sure all ISO menu options work for the ISO menu at boot
 Go over all folders on the ISO and make sure everything is there
 Check and fix minor issues like thunar open terminal here
 Make sure localizations work in installer
-live-installer slideshow
 Install/create a bodhi MOTD pkg
-Bodhi version of arandr
+add boot-repair ?
+swap file
+plymouth eject media message in simply-boss
+Live installer mint in po file
+live-installer slideshow localizations
+stefans bcw script on debian
+apt preferences  the way it's configured right now prevents both stable-security and stable-updates.
+AppCenter apps need to be installable on Debian
+Remove unneeded packages geany ack lintian git dpkg-repack open-ssh-server and so on
+
+
+enigma9o7 — Today at 12:44 PM
+Also, don't release it with this kernel xxx-15.    Use the next one xxx-16.  This one has known wifi issues, lotsa people complaining about it in debian channel.
+debian having bad luck with point releases lately.  first 12.3 had kernel with possible ext4 corruption issue, so they quickly released 12.4, and it has this wifi issue affects some people
+Unsure about:
+
+# Set LightDM to show user list by default
+        self.do_run_in_chroot(r"sed -i -r 's/^#?(greeter-hide-users)\s*=.*/\1=false/' /etc/lightdm/lightdm.conf")
 
 Packaging for standard ISO 686
 
@@ -24,7 +60,8 @@ bodhi-skel open terminal here in thunar broken
 pkexec should not display in LIVE
 calamares installer not working
 repo on ISO
-
+grub rescue mode
+Back to the sbin thing, if you're not going to add it to the path, maybe just add reboot, either via simlink to path, or as bash alias reboot=/usr/sbin/reboot?
 
 Current default time zone: 'US/Eastern'
 Local time is now:      Mon Dec 11 07:58:01 EST 2023.
@@ -35,7 +72,6 @@ DONE MAYBE
 
 64 bit 
    chromium use same desktop as Ubuntu
-   arandr
    picom conf
 
 32 bit
@@ -45,7 +81,6 @@ DONE MAYBE
 Ensure chromium suggested pkgs install  
 check and set PATH
 picom conf
-bodhi patched arandr ?
 
 check Policy kit leafpad and thunar 
 Thunar help page is not patched :(
@@ -55,7 +90,8 @@ apt sources list    does not appear to be in any package
 grub		    does not appear to be in any package
 efl-version code is missing not on git hub as it should be
 change repo bash aliases to functions to check PWD and verify if sure if not correct folder
-
+bodhi-theme-moksha-kl4k : Depends: light-themes but it is not installable
+ bodhi-theme-moksha-radiance : Depends: light-themes but it is not installable
 
 Packaging all apps on appcenter
 
