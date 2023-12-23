@@ -1,0 +1,57 @@
+copy /etc/default/motd-news and folder /etc/update-motd.d/ from BL7 Jammy
+create /etc/lsb-release
+rm the debian file in /etc/update-motd.d/
+rm /etc/update-motd.d/85-fwupd
+
+what to do about /etc/motd file ?
+
+IS THIS WORKING
+
+edit /etc/default/motd-news by hand should be in a package?
+motd-news-config/
+
+Also see basefiles for etc/update-motd.d/
+https://www.systutorials.com/docs/linux/man/5-update-motd/
+https://www.systutorials.com/docs/linux/man/8-run-parts/
+https://manpages.debian.org/bookworm/libpam-modules/pam_motd.8.en.html
+
+editok on the details, should be more than enough to you to create custom motds for your workstations:
+In the Days of Old MOTD was a way for administrators to tell users about important things about the system or communicate news, like, "Hey everyone, the print server is down again. We think Phil broke it." The sys-admin edited the needed file by hand. 
+
+But it seems in 2009, Ubuntu introduced  the concept of a "dynamic MOTD", by introducing the /etc/update-motd.d/* structure of scripts. Originally implemented  for Landscape (a commercial package management system by Canonical). It has been adopted by Debian, and other linux distros.
+
+At the time it caused some controversy as it calls wget with a "User Agent", and Canonical collects information about peoples systems. Some assholes called it spyware because it is enabled by default and you still find users say Ubuntu ships with spyware because of this as well as their bug reporting code. It is not really spyware as it well documented and can be trivially disabled by a multiple number of means.
+Anyway for my latop running BL5.x this User Agent string is:
+
+wget/1.19.4-1ubuntu2.2 Bodhi/Linux GNU/Linux/4.15.0-20-generic/x86_64 Intel(R)/Core(TM)/i7-4750HQ/CPU/@/2.00GHz cloud_id/unknown
+
+I could care less sharing that info with 'Corporate', but regardless in BL5 and in BL6 I have this disabled. More accurately in BL6 I am replacing it with our own MOTD.
+Now on to the specific details specific to Ubuntu 18.04 and Ubuntu 20.04. Other versions of Ubuntu or other distros these details may of course vary.
+
+There is a config file at  /etc/default/motd-news whose sole purpose seems to be to enable to disable the MOTD as well as set the URL used. There  are 3 config variables define in /etc/default/motd-news. The defaults are: ENABLED=1, URLS="https://motd.ubuntu.com/", WAIT="5"
+
+Asynchronously, about 60 seconds after boot, a systemd timer fires which runs "/etc/update-motd.d/50-motd-news --force".  Every 12 hours or so thereafter, this systemd timer job will re-run and update the /var/cache/motd-news. Details on this below.
+
+In /etc/update-motd.d/ there are a series of shell scripts that are run in numerical order to determine the message display at login. Clearly these are editable and can be disabled by deleting or by making nonexecutable. Also just as clearly one can add files there.
+One of these, 50-motd-news, is the one run to generate the MOTD form the URLS listed in /etc/default/motd-news. (It sources that file btw to get the variables). If ENABLED=1, it wgets the URLS (with USER_AGENT set) and parses the results and store it in /var/cache/motd-news. Parses means  loop over each of the URLS trim them to 80 characters per line, and a maximum of 10 lines, and concatenate them to a cache file in /var/cache/motd-news. Otherwise it exits. It is worth noting that if /var/cache/motd-news does not exist or is not readable to root, then a new /var/cache/motd-news will be created by a bit of bash trickery:
+ : > $CACHE
+
+All this does is create a root readable empty /var/cache/motd-news. 12 hours later it will updated 😦
+In /lib/systemd/system we have the two service files: motd-news.service  motd-news.timer
+
+In /etc/pam.d/login we have
+
+session    optional   pam_motd.so motd=/run/motd.dynamic
+session    optional   pam_motd.so noupdate
+
+With the comment:
+
+# Prints the message of the day upon successful login.
+# (Replaces the `MOTD_FILE' option in login.defs)
+# This includes a dynamically generated part from /run/motd.dynamic
+# and a static (admin-editable) part from /etc/motd.
+
+In man (8) pam_motd
+
+we have pam_motd is a PAM module that can be used to display arbitrary motd (message of the day)  files after a successful login. By default the /etc/motd file is shown. The message size is limited to 64KB.
+
