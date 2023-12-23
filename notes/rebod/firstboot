@@ -1,0 +1,12 @@
+insserv: FATAL: service \$remote_fs has to be enabled to use service bodhi-firstboot
+insserv: FATAL: service \$syslog has to be enabled to use service bodhi-firstboot
+insserv: FATAL: service \$all has to be enabled to use service bodhi-firstboot
+ 
+
+\
+
+All your $ are escaped: \$.
+
+Don't do that, youneed the variables, not the litteral dollar signs... ;)
+
+https://serverfault.com/questions/557124/insserv-rejected-the-script-header
