@@ -1,0 +1,15 @@
+when this is made for 32-bit, I suggest do not use chromium as default browser.  It requires SSE3 which is not available on many 32-bit machiens (iincluding mine) so won't even start.  Suggest use firefox-esr or epiphany-browser.
+
+I noticed already it starts with the bodhi quickstart file by default...  without any additional configuration. 
+But also by default its set to "restore tabs on startup" so once you start using it, it isnt the home page anymore. 
+
+Another thing with epiphany, every time I open prefererences, have to resize the window manually, it always starts bigger than my screen (which is now 1360x768)
+[Tested on debian/gnome, it doesn't do that.] 
+
+It resizes fine and scrollbar works fine.... but for some reason always pops up too big.
+And on my actual pentium 4, I have an actual CRT that I use at 1024x768 (or 1280x1024 when something needs 720p). 
+enigma9o7 — Today at 5:20 PM
+(and on my athlon64 we use a 1360x768 monitor....  so if i've got two machines using 768 rows, imagine other people might be doing so with their older machines too, so fitting in 768 lines seems useful....)
+
+ylee — Today at 5:31 PM
+[Tested on debian/gnome, it doesn't do that.] i mess with its configuration on Bodhi, ( that sets the QS on first opening the app) whatever I am doing clearly needs to be adjusted.
