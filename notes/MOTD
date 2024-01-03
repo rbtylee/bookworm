@@ -1,9 +1,17 @@
+deBodhi MOTD should be triggered in 5 hrs or so
+https://motd.bodhilinux.com/
+
 copy /etc/default/motd-news and folder /etc/update-motd.d/ from BL7 Jammy
 create /etc/lsb-release
 rm the debian file in /etc/update-motd.d/
 rm /etc/update-motd.d/85-fwupd
 
 what to do about /etc/motd file ?
+
+to force update of var/cache/motd:
+```sudo /etc/update-motd.d/50-motd-news --force```
+
+to test sudo run-parts /etc/update-motd.d/
 
 IS THIS WORKING
 
@@ -55,3 +63,51 @@ In man (8) pam_motd
 
 we have pam_motd is a PAM module that can be used to display arbitrary motd (message of the day)  files after a successful login. By default the /etc/motd file is shown. The message size is limited to 64KB.
 
+++++++++++++++++++++++++++++++++++++++++++++++++++
+$ systemctl status motd-news.timer
+● motd-news.timer - Message of the Day
+     Loaded: loaded (/lib/systemd/system/motd-news.timer; enabled; preset: enab>
+     Active: active (waiting) since Sun 2023-12-31 03:55:29 EST; 13min ago
+    Trigger: Sun 2023-12-31 15:18:29 EST; 11h left
+   Triggers: ● motd-news.service
+
+Warning: some journal files were not opened due to insufficient permissions.
+ylee@debian:~$ sudo systemctl status motd-news.timer
+[sudo] password for ylee: 
+● motd-news.timer - Message of the Day
+     Loaded: loaded (/lib/systemd/system/motd-news.timer; enabled; preset: enab>
+     Active: active (waiting) since Sun 2023-12-31 03:55:29 EST; 14min ago
+    Trigger: Sun 2023-12-31 15:18:29 EST; 11h left
+   Triggers: ● motd-news.service
+
+sudo run-parts  /etc/update-motd.d/
+========================================================================================
+ /etc/update-motd.d/50-motd-news
+ 
+``` Ensure we print safely, maximum of the first 10 lines,
+# maximum of the first 80 chars per line, no control chars
+safe_print() {
+	cat "$1" | head -n 10 | tr -d '\000-\011\013\014\016-\037' | cut -c -80
+}
+
+
+# If we're not forcing an update, and we have a cached motd-news file,
+# then just print it and exit as quickly as possible, for login performance.
+# Note that systemd should keep this cache file up to date, asynchronously
+if [ "$FORCED" != "1" ]; then
+  	if [ -r $CACHE ]; then
+		echo
+		safe_print $CACHE
+	else
+		: > $CACHE
+	fi
+	exit 0
+fi ```
+
+The expression [ -r $CACHE ] is a conditional expression in Bash, often used in shell scripts. Specifically, it checks whether the file specified by the variable $CACHE exists and is readable.
+
+: This is a built-in shell command that does nothing and always succeeds. It's often used as a no-op command.
+>  This is the output redirection operator in the shell.
+$CACHE This is a variable representing the file path.
+
+When you use : > $CACHE, you're essentially redirecting the empty output of the : command to the file specified by $CACHE. The effect of this is to create an empty file at the specified path if it doesn't exist or truncate the file to make it empty if it does exis
