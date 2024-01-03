@@ -1,4 +1,5 @@
 grub rescue with no password does not work with passwd locked, only with passwd deleted.
+man 8 autologin
 
 Can you install debian without a root password
 
