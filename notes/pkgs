@@ -1,0 +1,4 @@
+ cut -d'/' -f1 < NOW-32.txt > NOW-32.pkg
+ diff -bur NOW-32.pkg NOW-64.pkg  > NOW.diff 
+ cut -d'/' -f1 < NOW-64.txt > NOW-64.pkg
+ diff -bur NOW-32.pkg NOW-64.pkg  > NOW.diff 
