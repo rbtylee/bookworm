@@ -1,0 +1,17 @@
+
+plymouth-set-default-theme -l 
+plymouth-set-default-theme: command not found
+# Command is not in bath
+
+sudo plymouth-set-default-theme -l
+[sudo] password for ylee: 
+bodhi-boss
+bodhi-text
+details
+text
+tribar
+ 
+sudo plymouth-set-default-theme -R bodhi-boss
+
+Reference:
+https://wiki.debian.org/plymouth
