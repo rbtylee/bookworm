@@ -1,7 +1,9 @@
 BOOKWORM-64 VM
 ------------------------------------------------------------------------
-Check machine ID
-
+EFL RELEASE
+Check machine ID cat /etc/machine-id 
+Rebod add live policykit/pkexec file fix
+bodhi-skel open terminal here in thunar broken 
 live installer go over the post and pre remove shit in debian
 find code that makes systemd shit and remove 
 make sure ISO screenshot does not open in image-magic
@@ -28,7 +30,7 @@ Rebod change folder structure and package with latest changes
 Rebod the indentation and code is a fucking mess
 Rebod go over pkg-remove files
 Rebod add gpg signing (?)
-Rebod add live policykit/pkexec file fix
+
 Carefully go over all installed pkgs
 Make sure all ISO menu options work for the ISO menu at boot
 Go over all folders on the ISO and make sure everything is there
@@ -56,7 +58,7 @@ Unsure about:
 
 Packaging for standard ISO 686
 
-bodhi-skel open terminal here in thunar broken 
+
 pkexec should not display in LIVE
 calamares installer not working
 repo on ISO
