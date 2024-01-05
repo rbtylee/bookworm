@@ -41,3 +41,19 @@ man shadow
    the password is locked. The remaining characters on the line
    represent the password field before the password was locked.
 So * means no password can be used to access the account, and ! means its locked
+
+====================================================================================
+
+5.2.3.  The rescue boot option is unusable without a root password
+With the implementation of sulogin used since buster, booting with the rescue option always requires the root password. If one has not been set, this makes the rescue mode effectively unusable. However it is still possible to boot using the kernel parameter init=/sbin/sulogin --force
+
+To configure systemd to do the equivalent of this whenever it boots into rescue mode (also known as single mode: see systemd(1)), run sudo systemctl edit rescue.service and create a file saying just:
+
+[Service]
+Environment=SYSTEMD_SULOGIN_FORCE=1
+      
+It might also (or instead) be useful to do this for the emergency.service unit, which is started automatically in the case of certain errors (see systemd.special(7)), or if emergency is added to the kernel command line (e.g. if the system can't be recovered by using the rescue mode).
+
+For background and a discussion on the security implications see #802211.
+
+https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=802211
