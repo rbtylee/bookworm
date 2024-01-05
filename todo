@@ -1,4 +1,18 @@
 BOOKWORM-64 VM
+Add Blender to appcenter
+
+I have removed the environment variables in advanced moksha settings, but some are still getting set.  Any ideas where they're getting set?
+$ set|grep QT_
+QT_ACCESSIBILITY=1
+QT_QPA_PLATFORMTHEME=gtk2
+QT_STYLE_OVERRIDE=gtk2
+enigma9o7 — Yesterday at 9:29 PM
+I found where the accessibility one is set.... /etc/environment.d/90qt-a11y.conf (which came in at-spi2-core as a dependency of chromium) but still no clue how the other two are getting set 
+enigma9o7 — Today at 1:03 AM
+I really don't get what's going on with the scaling tho.  I can set QT_SCALE_FACTOR=0.5 which fixes the oversized apps I mentioned.... but then QBittorrent is broken (and unusable).
+https://bugzilla.suse.com/show_bug.cgi?id=920792
+https://github.com/JeffHoogland/moksha/blob/master/src/bin/e_main.c#L591 
+https://wiki.archlinux.org/title/Uniform_look_for_Qt_and_GTK_applications
 ------------------------------------------------------------------------
 EFL RELEASE
 Check machine ID cat /etc/machine-id 
