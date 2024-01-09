@@ -1,6 +1,8 @@
 BOOKWORM-64 VM
 Add Blender to appcenter
 
+The only way I could install Softmaker Office was to install gDebi and run it in Terminology. Running it from Thunar just opened Engrampa and tried to deal with it as a zip file; trying to run it in gDebi in Thunar just had it open and magically close.
+
 I have removed the environment variables in advanced moksha settings, but some are still getting set.  Any ideas where they're getting set?
 $ set|grep QT_
 QT_ACCESSIBILITY=1
